@@ -1,0 +1,151 @@
+{
+  "projectType": "saas",
+  "projectName": "TryDevUtils",
+  "projectDescription": "Essential developer utilities available as web app, desktop app, and Chrome extension",
+  "theme": "palm",
+  "primaryColor": "#3B82F6",
+  "lightColor": "#60A5FA",
+  "darkColor": "#2563EB",
+  "navigation": {
+    "tabs": [
+      {
+        "tab": "Documentation",
+        "groups": [
+          {
+            "group": "Get Started",
+            "pages": [
+              "introduction",
+              "quickstart"
+            ]
+          },
+          {
+            "group": "Installation",
+            "pages": [
+              "installation/web",
+              "installation/desktop",
+              "installation/chrome-extension"
+            ]
+          },
+          {
+            "group": "Core Features",
+            "pages": [
+              "features/overview",
+              "features/keyboard-shortcuts",
+              "features/command-palette",
+              "features/favorites"
+            ]
+          },
+          {
+            "group": "Guides",
+            "pages": [
+              "guides/development",
+              "guides/building",
+              "guides/testing",
+              "guides/deployment"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "Utilities",
+        "groups": [
+          {
+            "group": "Encoding & Decoding",
+            "pages": [
+              "utilities/encoding/base64",
+              "utilities/encoding/url-encoder",
+              "utilities/encoding/number-base",
+              "utilities/encoding/zlib",
+              "utilities/encoding/color"
+            ]
+          },
+          {
+            "group": "Formatting & Validation",
+            "pages": [
+              "utilities/formatting/json",
+              "utilities/formatting/yaml",
+              "utilities/formatting/sql",
+              "utilities/formatting/markdown",
+              "utilities/formatting/cron",
+              "utilities/formatting/regex"
+            ]
+          },
+          {
+            "group": "Generators",
+            "pages": [
+              "utilities/generators/uuid",
+              "utilities/generators/hash",
+              "utilities/generators/keypair",
+              "utilities/generators/timestamp"
+            ]
+          },
+          {
+            "group": "Text & Diff",
+            "pages": [
+              "utilities/text/string-analyser",
+              "utilities/text/diff"
+            ]
+          },
+          {
+            "group": "Security & Crypto",
+            "pages": [
+              "utilities/security/jwt",
+              "utilities/security/ssl"
+            ]
+          },
+          {
+            "group": "Reference",
+            "pages": [
+              "utilities/reference/http-status",
+              "utilities/reference/mime-type"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "Contributing",
+        "groups": [
+          {
+            "group": "Contributing",
+            "pages": [
+              "contributing/overview",
+              "contributing/adding-utilities",
+              "contributing/code-style"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "keyFeatures": [
+    "22 developer utilities across 6 categories",
+    "Multi-platform: Web, Desktop (Tauri), and Chrome Extension",
+    "Keyboard shortcuts and command palette for power users",
+    "Favorites system to quickly access frequently used tools",
+    "Dark mode support with theme persistence",
+    "Offline-capable desktop and extension versions"
+  ],
+  "publicApiSurface": [
+    "Base64 Converter",
+    "URL Encoder/Decoder",
+    "Number Base Converter",
+    "Zlib Compressor/Decompressor",
+    "Colour Converter",
+    "JSON Toolbox (format, validate, diff, schema, convert, query)",
+    "YAML Validator",
+    "SQL Formatter",
+    "Markdown Preview",
+    "Cron Parser",
+    "RegExp Tester",
+    "UUID Generator/Decoder (v1, v3, v4, v5, v6, v7)",
+    "Hash Generator (MD5, SHA1, SHA256, SHA512, Bcrypt)",
+    "Key Pair Generator (RSA, Ed25519, ECDSA)",
+    "Timestamp/Date Converter",
+    "String Analyser",
+    "Text Diff",
+    "JWT Decoder/Encoder",
+    "SSL Certificate Decoder",
+    "HTTP Status Code Reference",
+    "MIME Type Lookup"
+  ]
+}
