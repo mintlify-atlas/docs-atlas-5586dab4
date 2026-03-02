@@ -1,0 +1,202 @@
+---
+title: Command palette
+description: Navigate TryDevUtils instantly with the keyboard-driven command palette
+---
+
+The command palette is your fastest way to navigate TryDevUtils. It provides fuzzy search across all utilities, letting you jump to any tool in seconds.
+
+<img
+  src="/images/command-palette.png"
+  alt="Command palette interface showing search results"
+/>
+
+## Opening the command palette
+
+You can open the command palette in multiple ways:
+
+<Steps>
+  <Step title="Keyboard shortcut">
+    Press `⌘K` (macOS) or `Ctrl+K` (Windows/Linux) from anywhere in the app.
+  </Step>
+  
+  <Step title="Slash shortcut">
+    Press `/` from anywhere in the app (similar to Vim or Spotlight search).
+  </Step>
+  
+  <Step title="Click search button">
+    Click the "Search" button in the header (visible on larger screens).
+  </Step>
+  
+  <Step title="Type on homepage">
+    When on the homepage, just start typing any letter (a-z) to automatically open the command palette with that character.
+  </Step>
+</Steps>
+
+<Note>
+  The automatic typing detection on the homepage only works with letters (a-z, A-Z) and only when you're not already typing in an input field.
+</Note>
+
+## Searching for utilities
+
+The command palette uses fuzzy search to find utilities across multiple fields:
+
+- **Utility name** - "JSON Toolbox", "Base64 Converter", etc.
+- **Description** - "Format, validate, diff, schema, convert & query"
+- **Utility ID** - "json", "base64", "uuid", etc.
+
+Search is case-insensitive and matches partial strings, making it easy to find what you need with just a few keystrokes.
+
+### Search examples
+
+<CodeGroup>
+
+```text Example: "json"
+Matches:
+- JSON Toolbox (name contains "json")
+```
+
+```text Example: "format"
+Matches:
+- JSON Toolbox (description: "Format, validate...")
+- SQL Formatter (description: "Format SQL...")
+```
+
+```text Example: "uuid"
+Matches:
+- UUID Generator/Decoder (name and ID contain "uuid")
+```
+
+```text Example: "decode"
+Matches:
+- Base64 Converter (description: "Encode and decode...")
+- URL Encoder/Decoder (name and description)
+- JWT Decoder/Encoder (name)
+- SSL Certificate Decoder (name)
+- UUID Generator/Decoder (name)
+```
+
+</CodeGroup>
+
+## Navigation
+
+Once the command palette is open, navigate through results using your keyboard:
+
+<ResponseField name="↑ / ↓ (Arrow keys)" type="navigation">
+  Move selection up or down through the filtered results.
+</ResponseField>
+
+<ResponseField name="Enter" type="action">
+  Navigate to the selected utility.
+</ResponseField>
+
+<ResponseField name="Esc" type="action">
+  Close the command palette without navigating.
+</ResponseField>
+
+<ResponseField name="Mouse hover" type="action">
+  Hovering over an item automatically selects it and prefetches the utility for faster loading.
+</ResponseField>
+
+## Performance optimizations
+
+The command palette includes several performance optimizations:
+
+### Lazy loading with prefetch
+
+When you hover over a utility in the command palette, TryDevUtils automatically prefetches that utility's code in the background. This ensures instant loading when you select it.
+
+```tsx
+// From CommandPalette.tsx:133-136
+onMouseEnter={() => {
+  setSelectedIndex(index);
+  prefetchUtil(util.id);  // Prefetch on hover
+}}
+```
+
+### Smart state management
+
+The command palette resets its state when opened to ensure a clean search experience:
+
+- Search query is cleared
+- Selection index resets to 0
+- Input automatically receives focus
+
+### Scroll into view
+
+The selected item automatically scrolls into view as you navigate with arrow keys, ensuring you always see the current selection.
+
+## Utility information display
+
+Each utility in the command palette shows:
+
+<ResponseField name="Icon" type="visual">
+  A color-coded icon representing the utility's category and function.
+</ResponseField>
+
+<ResponseField name="Name" type="text">
+  The full name of the utility (e.g., "JSON Toolbox", "Base64 Converter").
+</ResponseField>
+
+<ResponseField name="Description" type="text">
+  A brief description of what the utility does.
+</ResponseField>
+
+<ResponseField name="Utility ID" type="badge">
+  The short ID shown in a badge (visible on larger screens), useful for direct URL navigation.
+</ResponseField>
+
+## Keyboard shortcuts reference
+
+At the bottom of the command palette, you'll find a quick reference of available keyboard shortcuts:
+
+- `↑↓` - Navigate through results
+- `↵` (Enter) - Select the highlighted utility
+- `esc` - Close the palette
+
+## Platform-specific behavior
+
+### Web version
+
+The command palette displays the `⌘K` shortcut hint in the header's search button.
+
+### Desktop version
+
+The desktop app shows the appropriate modifier key (`⌘K` on macOS, `Ctrl+K` on Windows/Linux) and includes an additional `⌘F` / `Ctrl+F` shortcut to focus the sidebar filter.
+
+### Extension version
+
+In the Chrome extension, the command palette includes the `⌘K` hint in the integrated search bar at the top of the utilities view.
+
+## Implementation details
+
+The command palette is built with the following components:
+
+- **Dialog component** - Accessible modal dialog from shadcn/ui
+- **Custom event handling** - Keyboard navigation with arrow keys and Enter
+- **Real-time filtering** - Updates results as you type
+- **Auto-focus input** - Ensures immediate typing when opened
+
+<Info>
+  The command palette is implemented in `/src/components/CommandPalette.tsx` and uses React hooks (`useCommandPalette`) for global state management.
+</Info>
+
+## Tips and tricks
+
+<Tip>
+  You don't need to type the full utility name. Just type a few characters that match what you're looking for:
+  - "jwt" → JWT Decoder/Encoder
+  - "sql" → SQL Formatter  
+  - "diff" → Text Diff, JSON Toolbox (which has diff functionality)
+</Tip>
+
+<Tip>
+  The command palette stays keyboard-focused, so you can quickly search, select with Enter, and start working in the utility without touching your mouse.
+</Tip>
+
+## Source code reference
+
+The command palette implementation can be found in:
+
+- Main component: `/src/components/CommandPalette.tsx:20-176`
+- Hook for global state: `/src/components/CommandPalette.tsx:179-235`
+- Keyboard shortcuts: `/src/components/KeyboardShortcuts.tsx`

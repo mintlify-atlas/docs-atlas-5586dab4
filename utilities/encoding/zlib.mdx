@@ -1,0 +1,143 @@
+---
+title: Zlib compressor
+description: Compress and decompress text using deflate (zlib) algorithm with Base64 encoding, including compression statistics and ratio calculation
+---
+
+The Zlib compressor uses the deflate algorithm to compress text data and encodes the result as Base64 for easy storage and transmission. It also decompresses Base64-encoded zlib data back to plain text.
+
+## Features
+
+### Deflate compression
+
+Uses the industry-standard deflate algorithm (the same compression used in ZIP files and gzip) via the `fflate` library for efficient compression.
+
+### Base64 output
+
+Compressed data is automatically Base64-encoded, making it:
+- Safe for text-based storage
+- Easy to transmit over HTTP
+- Compatible with JSON and XML
+- Suitable for embedding in HTML or CSS
+
+### Compression statistics
+
+After compressing or decompressing, view detailed statistics:
+
+**For compression:**
+- Input size in bytes
+- Output size in bytes (compressed)
+- Compression ratio as a percentage
+
+**For decompression:**
+- Input size in bytes (compressed Base64)
+- Output size in bytes (decompressed text)
+- Expansion percentage
+
+### Bidirectional operation
+
+Switch between compress and decompress modes using tabs:
+- **Compress** - Takes plain text and outputs compressed Base64
+- **Decompress** - Takes compressed Base64 and outputs plain text
+
+### Error handling
+
+Clear error messages for:
+- Invalid compressed data format
+- Corrupted Base64 input
+- Decompression failures
+
+### Tool cross-linking
+
+Quick navigation to the Base64 tool for scenarios where you need encoding without compression.
+
+### Keyboard shortcuts
+
+Speed up your workflow:
+- Execute compression or decompression
+- Copy output to clipboard
+- Clear all fields
+
+## Use cases
+
+### Reducing payload size
+
+Compress large JSON or XML data before sending it over the network:
+
+```
+Input: Large configuration file (1000 bytes)
+Output: Compressed Base64 string (450 bytes)
+Compression ratio: 55%
+```
+
+### Storing configuration data
+
+Compress and encode configuration strings to reduce storage requirements in databases or local storage.
+
+### URL shortening
+
+Compress long state data before encoding it in a URL parameter.
+
+### Log compression
+
+Compress verbose log messages before transmission to a logging service.
+
+### Text backup
+
+Create compressed backups of text content that can be safely stored or transmitted.
+
+<Info>
+Compression works best on repetitive or structured text. Random data, encrypted data, or already-compressed formats may not compress well.
+</Info>
+
+## How it works
+
+**Compression process:**
+
+1. Convert input text to UTF-8 bytes using `strToU8()`
+2. Apply deflate compression using `deflateSync()`
+3. Convert compressed bytes to Base64 string
+4. Calculate compression statistics
+5. Display the result with metrics
+
+**Decompression process:**
+
+1. Decode Base64 string to bytes
+2. Apply inflate decompression using `inflateSync()`
+3. Convert bytes back to UTF-8 string using `strFromU8()`
+4. Calculate decompression statistics
+5. Display the original text
+
+<Tip>
+For best compression ratios, use this tool on structured data like JSON, XML, or repetitive text rather than on random strings or pre-compressed data.
+</Tip>
+
+## Understanding compression ratios
+
+The compression ratio shows how much smaller (or larger) the output is compared to the input:
+
+- **Positive ratio** (e.g., +55%) - Data compressed by 55%
+- **Negative ratio** (e.g., -15%) - Data expanded by 15% (compression not beneficial)
+- **Near-zero ratio** - Data size remained similar
+
+<Note>
+Very short text (under 100 bytes) often has negative compression ratios because the compression overhead exceeds the space savings.
+</Note>
+
+## When to use Base64 vs Zlib
+
+**Use Base64 encoder when:**
+- You need to encode binary data or text without compression
+- File size is not a concern
+- You want faster processing
+- Compatibility is the primary goal
+
+**Use Zlib compressor when:**
+- You need to reduce data size significantly
+- You're working with large, repetitive, or structured text
+- Network bandwidth or storage space is limited
+- The overhead of compression/decompression is acceptable
+
+## Related tools
+
+- **Base64 encoder** - For encoding without compression
+- **URL encoder** - For percent-encoding compressed data in URLs

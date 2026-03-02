@@ -1,0 +1,378 @@
+---
+title: Building TryDevUtils
+description: Build TryDevUtils for production deployment across web, desktop, and extension platforms
+---
+
+This guide covers building TryDevUtils for production across all supported platforms: web app, desktop app, and Chrome extension.
+
+## Build overview
+
+TryDevUtils uses Vite as its build tool with different configurations for each platform:
+
+- **Web**: Standard Vite build with PWA support
+- **Desktop**: Tauri build with platform-specific bundles
+- **Extension**: Custom Vite build with extension-specific entry points
+
+## Web app build
+
+Build the web app for production deployment:
+
+<CodeGroup>
+```bash Production build
+npm run build
+```
+
+```bash Development build
+npm run build:dev
+```
+
+```bash Preview build
+npm run preview
+```
+</CodeGroup>
+
+### Build output
+
+The production build creates optimized files in `dist/`:
+
+```
+dist/
+├── index.html
+├── assets/
+│   ├── index-[hash].js      # Main bundle
+│   ├── vendor-[hash].js     # React, React Router
+│   ├── ui-[hash].js         # Radix UI components
+│   ├── utils-[hash].js      # Utilities (date-fns, etc.)
+│   └── index-[hash].css     # Styles
+├── manifest.webmanifest     # PWA manifest
+└── sw.js                    # Service worker (PWA)
+```
+
+### Build optimizations
+
+The Vite configuration applies several optimizations:
+
+#### Code minification
+
+```typescript
+// vite.config.ts
+minify: "terser",
+terserOptions: {
+  compress: {
+    drop_console: true,      // Remove console.log
+    drop_debugger: true,     // Remove debugger
+    pure_funcs: [           // Remove specific functions
+      "console.log",
+      "console.info",
+      "console.debug",
+      "console.warn",
+    ],
+    passes: 2,              // Two minification passes
+  },
+}
+```
+
+#### Code splitting
+
+Automatic chunk splitting reduces initial load time:
+
+- `vendor.js`: React, React DOM, React Router
+- `ui.js`: Radix UI components
+- `utils.js`: Date utilities, YAML parser, diff library
+
+#### PWA generation
+
+Production builds include Progressive Web App features:
+
+- Service worker for offline support
+- Web manifest for installability
+- Cached assets for fast loading
+
+<Info>
+  PWA features are only enabled for production web builds, not desktop or extension builds.
+</Info>
+
+## Desktop app build
+
+Build the Tauri desktop app for your platform:
+
+<CodeGroup>
+```bash Development
+npm run tauri:dev
+```
+
+```bash Production
+npm run tauri:build
+```
+</CodeGroup>
+
+### Build artifacts
+
+The desktop build creates platform-specific installers in `src-tauri/target/release/bundle/`:
+
+<Tabs>
+  <Tab title="macOS">
+    ```
+    src-tauri/target/release/bundle/
+    ├── dmg/
+    │   └── TryDevUtils_0.1.4_aarch64.dmg      # Apple Silicon
+    │   └── TryDevUtils_0.1.4_x86_64.dmg       # Intel
+    └── macos/
+        └── TryDevUtils.app
+    ```
+
+    **Distribution**: Upload `.dmg` files to GitHub Releases or your website.
+  </Tab>
+
+  <Tab title="Windows">
+    ```
+    src-tauri/target/release/bundle/
+    ├── msi/
+    │   └── TryDevUtils_0.1.4_x64_en-US.msi   # MSI installer
+    └── nsis/
+        └── TryDevUtils_0.1.4_x64-setup.exe   # NSIS installer
+    ```
+
+    **Distribution**: Provide both MSI (enterprise) and NSIS (consumer) installers.
+  </Tab>
+
+  <Tab title="Linux">
+    ```
+    src-tauri/target/release/bundle/
+    ├── deb/
+    │   └── trydevutils_0.1.4_amd64.deb       # Debian package
+    ├── rpm/
+    │   └── trydevutils-0.1.4-1.x86_64.rpm    # RPM package
+    └── appimage/
+        └── trydevutils_0.1.4_amd64.AppImage  # AppImage
+    ```
+
+    **Distribution**: AppImage is most portable. Provide deb/rpm for package managers.
+  </Tab>
+</Tabs>
+
+### Cross-platform builds
+
+The GitHub Actions workflow builds for all platforms:
+
+```yaml
+# .github/workflows/release-desktop.yml
+matrix:
+  include:
+    - platform: macos-latest
+      target: aarch64-apple-darwin
+    - platform: macos-latest
+      target: x86_64-apple-darwin
+    - platform: ubuntu-22.04
+      target: x86_64-unknown-linux-gnu
+    - platform: windows-latest
+      target: x86_64-pc-windows-msvc
+```
+
+### Version sync
+
+The `sync:version` script ensures version consistency:
+
+```bash
+npm run sync:version
+```
+
+This syncs the version from `package.json` to:
+- `src-tauri/tauri.conf.json`
+- `extension/manifest.json`
+
+<Warning>
+  Always run `sync:version` before building desktop or extension releases.
+</Warning>
+
+## Chrome extension build
+
+Build the Chrome extension:
+
+<Steps>
+  <Step title="Build the extension bundle">
+    ```bash
+    npm run build:extension
+    ```
+
+    This builds to `dist-extension/` with extension-specific configuration.
+  </Step>
+
+  <Step title="Prepare for distribution">
+    ```bash
+    npm run extension:prepare
+    ```
+
+    This:
+    1. Builds the extension
+    2. Copies `manifest.json` to `dist-extension/`
+    3. Copies icons to `dist-extension/icons/`
+    4. Removes web-specific files (like `_redirects`)
+  </Step>
+
+  <Step title="Create distribution package">
+    ```bash
+    cd dist-extension
+    zip -r ../TryDevUtils_extension_v0.1.4.zip .
+    ```
+  </Step>
+</Steps>
+
+### Extension build differences
+
+The extension build differs from the web build:
+
+```typescript
+// vite.config.ts
+const isExtension = mode === "extension";
+
+build: {
+  outDir: isExtension ? "dist-extension" : "dist",
+  rollupOptions: {
+    input: isExtension
+      ? {
+          index: "extension/index.html",
+          background: "extension/background.ts",
+        }
+      : undefined,
+    output: {
+      entryFileNames: "[name].js",  // No hashes for extensions
+      manualChunks: isExtension ? undefined : {...},  // No splitting
+    },
+  },
+}
+```
+
+<Info>
+  Extensions don't use code splitting or hashed filenames because Chrome's extension loader expects fixed entry points.
+</Info>
+
+## CI builds
+
+The CI pipeline runs automated builds and tests:
+
+```bash
+npm run build:ci
+```
+
+This command:
+1. Runs `vite build` to build the web app
+2. Installs Playwright browsers
+3. Runs `npm run test:ci` to verify the build
+
+### GitHub Actions workflow
+
+```yaml
+# .github/workflows/ci-vercel.yml
+jobs:
+  build-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps chromium
+
+      - name: Build and run tests
+        run: npm run build:ci
+```
+
+## Build configuration
+
+### Vite configuration
+
+Key settings in `vite.config.ts`:
+
+```typescript
+export default defineConfig(({ mode }) => {
+  const isExtension = mode === "extension";
+  const isTauri = !!process.env.TAURI_ENV_PLATFORM;
+  const isWebProduction = mode === "production" && !isTauri;
+
+  return {
+    server: {
+      host: host || "::",
+      port: host ? 1420 : 8080,
+    },
+    build: {
+      outDir: isExtension ? "dist-extension" : "dist",
+      minify: "terser",
+      sourcemap: false,
+      cssMinify: true,
+      cssCodeSplit: true,
+      chunkSizeWarningLimit: 1000,
+    },
+  };
+});
+```
+
+### TypeScript configuration
+
+Type checking is enforced during builds:
+
+```bash
+npm run check  # tsc && vite build
+```
+
+## Build troubleshooting
+
+### Build fails with type errors
+
+Run type checking separately to see full errors:
+
+```bash
+npx tsc --noEmit
+```
+
+### Out of memory during build
+
+Increase Node.js memory limit:
+
+```bash
+NODE_OPTIONS="--max-old-space-size=4096" npm run build
+```
+
+### Tauri build fails on Linux
+
+Install required system dependencies:
+
+```bash
+sudo apt-get update
+sudo apt-get install -y \
+  libwebkit2gtk-4.1-dev \
+  libappindicator3-dev \
+  librsvg2-dev \
+  patchelf \
+  libgtk-3-dev \
+  libsoup-3.0-dev
+```
+
+### Extension build creates wrong files
+
+Ensure you're using the extension-specific command:
+
+```bash
+npm run extension:prepare  # Not just build:extension
+```
+
+## Production checklist
+
+Before deploying to production:
+
+- [ ] Run `npm run check` to verify types
+- [ ] Run `npm run lint` to check code quality
+- [ ] Run `npm run test` to verify functionality
+- [ ] Update version in `package.json`
+- [ ] Run `npm run sync:version` to sync versions
+- [ ] Build and test on target platforms
+- [ ] Verify bundle sizes are reasonable
+- [ ] Test PWA features (web app)
+- [ ] Test installers (desktop app)
+- [ ] Test extension in Chrome
+
+## Next steps
+
+- Learn about [testing](/guides/testing) your builds
+- Set up [deployment](/guides/deployment) pipelines
+- Return to [development](/guides/development) setup

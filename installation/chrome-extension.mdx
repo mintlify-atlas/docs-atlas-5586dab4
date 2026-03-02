@@ -1,0 +1,137 @@
+---
+title: Install Chrome extension
+description: Build and install TryDevUtils as a Chrome browser extension
+---
+
+You can use TryDevUtils as a Chrome extension, giving you quick access to developer utilities directly from your browser.
+
+## Prerequisites
+
+Before you begin, ensure you have:
+
+- Node.js (version 16 or higher)
+- npm package manager
+- Google Chrome or Chromium-based browser
+
+## Build the extension
+
+<Steps>
+  <Step title="Clone the repository">
+    Clone the TryDevUtils repository:
+    ```bash
+    git clone https://github.com/yourusername/trydevutils.git
+    cd trydevutils
+    ```
+  </Step>
+
+  <Step title="Install dependencies">
+    Install the required npm packages:
+    ```bash
+    npm install
+    ```
+  </Step>
+
+  <Step title="Build extension files">
+    Prepare the extension for installation:
+    ```bash
+    npm run extension:prepare
+    ```
+
+    This command:
+    - Syncs the version from `package.json` to `manifest.json`
+    - Builds the extension in production mode
+    - Copies `manifest.json` to `dist-extension/`
+    - Copies extension icons to `dist-extension/`
+    - Removes web-specific files
+  </Step>
+</Steps>
+
+## Install in Chrome
+
+<Steps>
+  <Step title="Open Chrome extensions page">
+    Navigate to:
+    ```
+    chrome://extensions/
+    ```
+
+    Or access via Chrome menu → Extensions → Manage Extensions.
+  </Step>
+
+  <Step title="Enable Developer Mode">
+    Toggle the "Developer mode" switch in the top-right corner of the extensions page.
+  </Step>
+
+  <Step title="Load the extension">
+    Click "Load unpacked" and select the `dist-extension/` directory from your project folder.
+  </Step>
+
+  <Step title="Use the extension">
+    Click the TryDevUtils icon in your Chrome toolbar to open the utilities in a popup window.
+
+    The extension will open in a 1200×800 pixel window. If you already have the extension open, clicking the icon will focus that window instead of creating a new one.
+  </Step>
+</Steps>
+
+## Extension features
+
+The Chrome extension includes:
+
+- **Manifest version**: 3 (latest Chrome extension format)
+- **Permissions**: Clipboard read and write access
+- **Popup window**: Opens utilities in a dedicated window
+- **Persistent state**: Reuses existing window when available
+
+## Publishing to Chrome Web Store
+
+To distribute your extension:
+
+<Steps>
+  <Step title="Create a zip file">
+    Package the `dist-extension/` directory:
+    ```bash
+    cd dist-extension
+    zip -r ../trydevutils-extension.zip .
+    cd ..
+    ```
+  </Step>
+
+  <Step title="Upload to Chrome Web Store">
+    1. Visit the [Chrome Web Store Developer Console](https://chrome.google.com/webstore/devconsole/)
+    2. Create a developer account (one-time $5 registration fee)
+    3. Click "New Item" and upload `trydevutils-extension.zip`
+    4. Fill in store listing details and submit for review
+  </Step>
+</Steps>
+
+## Extension configuration
+
+The extension is configured in `extension/manifest.json`:
+
+- **Name**: TryDevUtils
+- **Description**: Essential developer utilities
+- **Homepage**: https://www.trydevutils.com
+- **Version**: Synced from `package.json`
+
+## Troubleshooting
+
+### Extension doesn't load
+
+Ensure you've run `npm run extension:prepare` and are loading the `dist-extension/` folder, not the `extension/` source folder.
+
+### Missing icons
+
+Verify that `extension/icons/` contains:
+- `icon16.png`
+- `icon48.png`
+- `icon128.png`
+
+### Clipboard permissions error
+
+The extension requires clipboard permissions for copy/paste functionality. These are declared in `manifest.json` under `permissions`.
+
+### Updates not appearing
+
+After rebuilding the extension:
+1. Go to `chrome://extensions/`
+2. Click the refresh icon on the TryDevUtils extension card

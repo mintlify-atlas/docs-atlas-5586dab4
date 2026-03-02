@@ -1,0 +1,211 @@
+---
+title: YAML validator
+description: Validate YAML syntax, format YAML documents, and convert between YAML and JSON
+---
+
+The YAML validator helps you validate YAML syntax, format YAML documents, and convert between YAML and JSON formats. It provides real-time validation with auto-detection of errors.
+
+## Features
+
+### Validation
+
+Check if your YAML is syntactically correct:
+
+- Real-time validation as you type
+- Detailed error messages with line information
+- Visual indicators for valid/invalid YAML
+- Line count and file size statistics
+
+<Note>
+The validator automatically checks syntax as you type, with a 500ms delay to avoid performance issues.
+</Note>
+
+### Formatting
+
+Format YAML with consistent indentation:
+
+- 2-space indentation (standard)
+- 120-character line width
+- Consistent structure and spacing
+- Removes unnecessary complexity
+
+### YAML to JSON conversion
+
+Convert YAML to JSON format:
+
+- Automatic conversion when validation succeeds
+- Pretty-printed JSON output
+- Useful for debugging and data transformation
+- Bidirectional conversion support
+
+### JSON to YAML conversion
+
+Convert JSON back to YAML:
+
+- Edit the JSON output
+- Click "Convert to YAML" to transform back
+- Useful for format transformation
+- Preserves data structure
+
+## Use cases
+
+### Configuration files
+
+Validate Kubernetes, Docker Compose, and other YAML configs:
+
+```yaml
+server:
+  host: localhost
+  port: 8080
+  ssl:
+    enabled: true
+    certificate: /path/to/cert.pem
+
+database:
+  type: postgresql
+  host: db.example.com
+  port: 5432
+  name: myapp
+```
+
+### CI/CD pipelines
+
+Check GitHub Actions, GitLab CI, or CircleCI configuration files.
+
+### Data serialization
+
+Convert between YAML and JSON for data processing:
+
+```yaml
+features:
+  - authentication
+  - logging
+  - monitoring
+  - caching
+
+settings:
+  debug: false
+  max_connections: 100
+  timeout: 30s
+```
+
+### API specifications
+
+Validate OpenAPI/Swagger YAML specifications.
+
+## YAML syntax guide
+
+The validator includes helpful syntax tips:
+
+- **Indentation** - Use 2 spaces (no tabs)
+- **Strings** - Strings with special characters need quotes
+- **Lists** - Use dashes (-) or square brackets []
+- **Objects** - Use colons (:) or curly braces {}
+- **Comments** - Start with # symbol
+
+<Info>
+YAML is whitespace-sensitive. Always use spaces for indentation, never tabs.
+</Info>
+
+## Validation feedback
+
+The validator provides clear visual feedback:
+
+- **Valid badge** - Green checkmark when YAML is valid
+- **Invalid badge** - Red X when YAML has errors
+- **Stats badge** - Shows line count and byte size
+- **Error alerts** - Detailed error messages with descriptions
+
+## Examples
+
+Click the "Examples" button to load a sample YAML configuration:
+
+```yaml
+# Example YAML configuration
+server:
+  host: localhost
+  port: 8080
+  ssl:
+    enabled: true
+    certificate: /path/to/cert.pem
+
+database:
+  type: postgresql
+  host: db.example.com
+  port: 5432
+  name: myapp
+  credentials:
+    username: user
+    password: secret
+
+features:
+  - authentication
+  - logging
+  - monitoring
+  - caching
+
+settings:
+  debug: false
+  max_connections: 100
+  timeout: 30s
+```
+
+## Copy functionality
+
+Each section has a copy button:
+
+- **Copy YAML** - Copy the YAML input
+- **Copy JSON** - Copy the JSON output
+- Click the copy icon in the top-right of each editor
+
+## Keyboard shortcuts
+
+- **Cmd/Ctrl + Enter** - Validate YAML
+- **Cmd/Ctrl + K** - Clear all inputs
+- **Cmd/Ctrl + C** - Copy output
+
+## Tips
+
+<Tip>
+Use the format button to automatically fix indentation issues in your YAML.
+</Tip>
+
+<Tip>
+The JSON output is useful for debugging - it shows exactly how the YAML parser interprets your document.
+</Tip>
+
+<Tip>
+Comments in YAML are preserved during formatting but removed during JSON conversion.
+</Tip>
+
+## Common errors
+
+### Indentation errors
+
+YAML requires consistent indentation. Mixing spaces and tabs causes errors.
+
+### Unquoted special characters
+
+Strings containing colons, brackets, or other special characters need quotes:
+
+```yaml
+# Incorrect
+title: Hello: World
+
+# Correct
+title: "Hello: World"
+```
+
+### Invalid list syntax
+
+Lists must have consistent formatting:
+
+```yaml
+# Correct
+features:
+  - feature1
+  - feature2
+
+# Also correct
+features: [feature1, feature2]
+```

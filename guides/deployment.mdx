@@ -1,0 +1,435 @@
+---
+title: Deployment guide
+description: Deploy TryDevUtils to production across web, desktop, and extension platforms
+---
+
+This guide covers deploying TryDevUtils to production for all supported platforms: web app on Vercel, desktop app via GitHub Releases, and Chrome extension to the Chrome Web Store.
+
+## Deployment overview
+
+TryDevUtils supports three deployment targets:
+
+- **Web app**: Deployed to Vercel with automatic previews and production deploys
+- **Desktop app**: Released via GitHub Releases with platform-specific installers
+- **Chrome extension**: Published to Chrome Web Store
+
+## Web app deployment
+
+The web app deploys automatically to Vercel on every push to `main`.
+
+### Vercel setup
+
+<Steps>
+  <Step title="Connect repository">
+    1. Sign in to [Vercel](https://vercel.com)
+    2. Import your GitHub repository
+    3. Select the repository containing TryDevUtils
+  </Step>
+
+  <Step title="Configure build settings">
+    Vercel auto-detects Vite projects, but verify:
+
+    ```yaml
+    Framework Preset: Vite
+    Build Command: npm run build
+    Output Directory: dist
+    Install Command: npm install
+    ```
+  </Step>
+
+  <Step title="Deploy">
+    Click "Deploy". Vercel will:
+    - Install dependencies
+    - Run the build
+    - Deploy to production
+    - Provide a production URL
+  </Step>
+</Steps>
+
+### Vercel configuration
+
+The `vercel.json` file configures URL rewrites for client-side routing:
+
+```json
+{
+  "rewrites": [
+    { "source": "/privacy", "destination": "/privacy/index.html" },
+    { "source": "/(.*)", "destination": "/index.html" }
+  ]
+}
+```
+
+This ensures:
+- All routes serve `index.html` (React Router handles routing)
+- `/privacy` serves static privacy page
+- No 404 errors on direct URL access
+
+### Automatic deployments
+
+Vercel automatically deploys:
+
+- **Production**: Every push to `main` branch
+- **Preview**: Every push to pull requests
+- **Rollback**: Instant rollback to previous deployments
+
+### Environment variables
+
+TryDevUtils doesn't require environment variables, but if needed:
+
+1. Go to Vercel Dashboard → Project Settings → Environment Variables
+2. Add variables prefixed with `VITE_`
+3. Redeploy to apply changes
+
+```bash
+VITE_APP_VERSION=0.1.4
+VITE_API_URL=https://api.example.com  # If needed in future
+```
+
+### Deployment preview URLs
+
+Each pull request gets a unique preview URL:
+
+```
+https://trydevutils-git-feature-branch-yourusername.vercel.app
+```
+
+Preview deployments:
+- Build from PR branch
+- Include all changes from PR
+- Update automatically on new commits
+- Deleted when PR is merged/closed
+
+## Desktop app deployment
+
+Desktop apps are released via GitHub Releases with automated builds for all platforms.
+
+### Manual release process
+
+<Steps>
+  <Step title="Update version">
+    Edit `package.json` to bump the version:
+
+    ```json
+    {
+      "version": "0.1.5"
+    }
+    ```
+  </Step>
+
+  <Step title="Sync version">
+    ```bash
+    npm run sync:version
+    ```
+
+    This updates:
+    - `src-tauri/tauri.conf.json`
+    - `extension/manifest.json`
+  </Step>
+
+  <Step title="Commit changes">
+    ```bash
+    git add .
+    git commit -m "Bump version to 0.1.5"
+    git push origin main
+    ```
+  </Step>
+
+  <Step title="Trigger release workflow">
+    1. Go to GitHub → Actions tab
+    2. Select "Release Desktop App" workflow
+    3. Click "Run workflow"
+    4. Enter version: `0.1.5`
+    5. Choose draft: `true` (recommended)
+    6. Click "Run workflow"
+  </Step>
+</Steps>
+
+### Automated build workflow
+
+The GitHub Actions workflow builds for all platforms:
+
+```yaml
+# .github/workflows/release-desktop.yml
+strategy:
+  matrix:
+    include:
+      - platform: macos-latest
+        target: aarch64-apple-darwin
+        label: macOS-arm64
+      - platform: macos-latest
+        target: x86_64-apple-darwin
+        label: macOS-x64
+      - platform: ubuntu-22.04
+        target: x86_64-unknown-linux-gnu
+        label: Linux-x64
+      - platform: windows-latest
+        target: x86_64-pc-windows-msvc
+        label: Windows-x64
+```
+
+### Build artifacts
+
+The workflow generates these files:
+
+- `TryDevUtils_0.1.5_macOS-arm64.dmg` (Apple Silicon)
+- `TryDevUtils_0.1.5_macOS-x64.dmg` (Intel Mac)
+- `TryDevUtils_0.1.5_Linux-x64.deb` (Debian/Ubuntu)
+- `TryDevUtils_0.1.5_Linux-x64.AppImage` (Universal Linux)
+- `TryDevUtils_0.1.5_Windows-x64.msi` (Windows installer)
+- `TryDevUtils_0.1.5_Windows-x64_setup.exe` (Windows setup)
+- `TryDevUtils_0.1.5_checksums_sha256.txt` (SHA256 hashes)
+
+### Publishing the release
+
+<Steps>
+  <Step title="Review draft release">
+    1. Go to GitHub → Releases
+    2. Find the draft release for v0.1.5
+    3. Review generated release notes
+  </Step>
+
+  <Step title="Test installers">
+    Download and test installers on target platforms:
+    - macOS: Install .dmg and verify app launches
+    - Windows: Install .msi or .exe and verify
+    - Linux: Install .deb/.AppImage and verify
+  </Step>
+
+  <Step title="Publish release">
+    Click "Publish release" to make it public.
+  </Step>
+</Steps>
+
+### Auto-update configuration
+
+Tauri supports auto-updates. To enable:
+
+1. Configure updater in `src-tauri/tauri.conf.json`:
+
+```json
+{
+  "tauri": {
+    "updater": {
+      "active": true,
+      "endpoints": [
+        "https://github.com/yourusername/trydevutils/releases/latest/download/latest.json"
+      ],
+      "dialog": true,
+      "pubkey": "YOUR_PUBLIC_KEY"
+    }
+  }
+}
+```
+
+2. Generate signing keys:
+
+```bash
+npm run tauri signer generate
+```
+
+3. Add `TAURI_SIGNING_PRIVATE_KEY` to GitHub Secrets
+
+## Chrome extension deployment
+
+Publish the Chrome extension to the Chrome Web Store.
+
+### Preparation
+
+<Steps>
+  <Step title="Update version">
+    Update version in `package.json` (e.g., `0.1.5`).
+  </Step>
+
+  <Step title="Sync and build">
+    ```bash
+    npm run sync:version
+    npm run extension:prepare
+    ```
+  </Step>
+
+  <Step title="Create package">
+    ```bash
+    cd dist-extension
+    zip -r ../TryDevUtils_extension_v0.1.5.zip .
+    cd ..
+    ```
+  </Step>
+
+  <Step title="Test locally">
+    1. Go to `chrome://extensions/`
+    2. Enable Developer mode
+    3. Load unpacked → select `dist-extension/`
+    4. Test all utilities
+    5. Check for console errors
+  </Step>
+</Steps>
+
+### Chrome Web Store submission
+
+<Steps>
+  <Step title="Create developer account">
+    1. Go to [Chrome Web Store Developer Dashboard](https://chrome.google.com/webstore/devconsole)
+    2. Pay one-time $5 registration fee
+    3. Complete account setup
+  </Step>
+
+  <Step title="Upload extension">
+    1. Click "New Item"
+    2. Upload `TryDevUtils_extension_v0.1.5.zip`
+    3. Wait for automatic security scan
+  </Step>
+
+  <Step title="Complete store listing">
+    Fill in required fields:
+
+    - **Name**: TryDevUtils
+    - **Description**: Essential developer utilities for JSON formatting, base64 encoding, diff checking, and more. All processing happens locally in your browser.
+    - **Category**: Developer Tools
+    - **Language**: English
+    - **Icon**: 128x128px (from `extension/icons/`)
+    - **Screenshots**: 1280x800px or 640x400px (at least 1)
+    - **Privacy Policy**: Link to privacy page
+  </Step>
+
+  <Step title="Submit for review">
+    Click "Submit for review". Review typically takes 1-3 days.
+  </Step>
+</Steps>
+
+### Extension updates
+
+To update a published extension:
+
+1. Increment version in `package.json`
+2. Run `npm run sync:version`
+3. Build: `npm run extension:prepare`
+4. Create new zip file
+5. Upload to Chrome Web Store (same item)
+6. Submit for review
+
+Chrome automatically updates user installations within a few hours of approval.
+
+### Automated extension release
+
+Use GitHub Actions to automate extension releases:
+
+```yaml
+# .github/workflows/ci-vercel.yml (excerpt)
+release-extension:
+  if: github.event_name == 'workflow_dispatch' && 
+      inputs.release_extension == true && 
+      github.ref == 'refs/heads/main'
+  steps:
+    - name: Build extension
+      run: npm run extension:prepare
+
+    - name: Create ZIP
+      run: |
+        cd dist-extension
+        zip -r ../TryDevUtils_extension_v${{ steps.version.outputs.version }}.zip .
+
+    - name: Create GitHub Release
+      uses: softprops/action-gh-release@v2
+      with:
+        tag_name: extension-v${{ steps.version.outputs.version }}
+        files: TryDevUtils_extension_v${{ steps.version.outputs.version }}.zip
+```
+
+Trigger via:
+1. GitHub → Actions → CI workflow
+2. Run workflow → Check "Build and release Chrome extension"
+
+## Deployment checklist
+
+Before deploying to production:
+
+### Pre-deployment
+
+- [ ] Update version in `package.json`
+- [ ] Run `npm run sync:version`
+- [ ] Run `npm run check` (type checking)
+- [ ] Run `npm run lint` (code quality)
+- [ ] Run `npm run test` (automated tests)
+- [ ] Test production build locally (`npm run preview`)
+- [ ] Update CHANGELOG.md with changes
+
+### Web deployment
+
+- [ ] Merge to `main` branch
+- [ ] Verify Vercel deployment succeeds
+- [ ] Test production URL
+- [ ] Verify PWA features work
+- [ ] Check Lighthouse scores
+
+### Desktop deployment
+
+- [ ] Trigger release workflow
+- [ ] Wait for all platform builds
+- [ ] Download and test each installer
+- [ ] Verify checksums match
+- [ ] Publish GitHub Release
+- [ ] Announce release (if applicable)
+
+### Extension deployment
+
+- [ ] Build extension package
+- [ ] Test extension locally
+- [ ] Upload to Chrome Web Store
+- [ ] Submit for review
+- [ ] Monitor review status
+- [ ] Announce when published
+
+## Rollback procedures
+
+### Web app rollback
+
+Vercel makes rollback instant:
+
+1. Go to Vercel Dashboard → Deployments
+2. Find previous successful deployment
+3. Click "..." → "Promote to Production"
+4. Confirm promotion
+
+### Desktop app rollback
+
+1. Go to GitHub Releases
+2. Mark current release as "pre-release"
+3. Publish previous version as latest
+4. Users can manually download previous version
+
+### Extension rollback
+
+1. Build previous version
+2. Upload to Chrome Web Store
+3. Submit for expedited review (explain urgent issue)
+4. Chrome approves rollbacks faster than new features
+
+## Monitoring deployments
+
+### Vercel Analytics
+
+Enable Vercel Analytics for web app insights:
+- Page views and visitors
+- Performance metrics (Core Web Vitals)
+- Traffic sources
+- Geographic distribution
+
+### GitHub Release downloads
+
+Track desktop app adoption:
+- View download counts per asset
+- Monitor across platforms
+- Identify popular platforms
+
+### Chrome Web Store stats
+
+Track extension performance:
+- Active users (daily/weekly)
+- User ratings and reviews
+- Installation/uninstallation trends
+
+## Next steps
+
+- Review [building](/guides/building) for production
+- Learn about [testing](/guides/testing) deployments
+- Return to [development](/guides/development) workflow

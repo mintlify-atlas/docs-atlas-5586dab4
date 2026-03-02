@@ -1,0 +1,96 @@
+---
+title: Hash generator and verifier
+description: Generate cryptographic hashes using MD5, SHA1, SHA256, SHA512, and Bcrypt algorithms
+---
+
+The hash generator creates cryptographic hashes from any text input. You can generate multiple hash types simultaneously and verify if a hash matches given text.
+
+## Features
+
+### Auto-generate hashes
+
+As you type text, the tool automatically generates hashes using all supported algorithms. The hashes update in real-time with a 300ms debounce to ensure smooth performance.
+
+### Supported algorithms
+
+- **MD5** - 128-bit hash (not cryptographically secure, use only for checksums)
+- **SHA1** - 160-bit hash (deprecated for security applications)
+- **SHA256** - 256-bit hash (recommended for most applications)
+- **SHA512** - 512-bit hash (highest security, larger output)
+- **Bcrypt** - Adaptive password hashing with configurable salt rounds
+
+<Warning>
+MD5 and SHA1 are vulnerable to collision attacks. Only use them for non-security purposes like checksums. For password hashing, always use Bcrypt.
+</Warning>
+
+### Bcrypt salt rounds
+
+Bcrypt uses a cost factor (salt rounds) to make hashing intentionally slow and resistant to brute-force attacks:
+
+- Lower values (4-6): Faster but less secure
+- Default value (10): Good balance for most applications
+- Higher values (12-20): Slower but more secure
+
+<Info>
+Each increment of the salt rounds doubles the computation time. Choose a value that provides adequate security without causing unacceptable delays in your application.
+</Info>
+
+## Hash verification
+
+Switch to the Verifier tab to check if a hash matches given text:
+
+1. Enter the original text
+2. Paste the hash you want to verify
+3. Click "Verify"
+4. The tool checks the hash against all algorithms (MD5, SHA1, SHA256, SHA512, Bcrypt)
+5. You'll see which algorithm produced the matching hash
+
+<Tip>
+The verifier automatically detects which hashing algorithm was used, so you don't need to specify it.
+</Tip>
+
+## Copy functionality
+
+Each hash has a dedicated copy button. Click it to copy the hash value to your clipboard.
+
+## Keyboard shortcuts
+
+- **Cmd/Ctrl + Enter** - Generate hashes
+- **Cmd/Ctrl + C** - Copy all hashes
+- **Cmd/Ctrl + Shift + Backspace** - Clear all
+
+## Use cases
+
+### Password hashing
+
+Use Bcrypt with appropriate salt rounds (10 or higher) to securely hash passwords before storing them.
+
+```text
+Example with salt rounds 12:
+Input: mySecurePassword123
+Bcrypt: $2a$12$KIXzq3r8Y...
+```
+
+### File integrity verification
+
+Generate SHA256 hashes to verify file integrity during downloads or transfers.
+
+### API request signing
+
+Create SHA256 or SHA512 hashes of request payloads for API authentication.
+
+### Data deduplication
+
+Use SHA256 to identify duplicate content by comparing hashes instead of full content.
+
+<Note>
+All hash generation happens in your browser using the Web Crypto API. Your data never leaves your device.
+</Note>
+
+## Security considerations
+
+- **Never use MD5 or SHA1** for passwords or security-critical applications
+- **Use Bcrypt** specifically for password hashing
+- **Use SHA256** for general-purpose cryptographic hashing
+- **Use SHA512** when you need maximum security and can handle larger output
+- **Increase salt rounds** for highly sensitive data, but balance security with performance

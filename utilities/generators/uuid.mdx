@@ -1,0 +1,87 @@
+---
+title: UUID generator and validator
+description: Generate and validate UUIDs with support for versions 1, 3, 4, 5, 6, and 7
+---
+
+The UUID generator helps you create universally unique identifiers (UUIDs) using different versions and algorithms. You can also validate existing UUIDs and decode time-based versions to extract embedded timestamp information.
+
+## Features
+
+### Generate UUIDs
+
+You can generate UUIDs using six different versions:
+
+- **v1** - Time-based with MAC address and clock sequence
+- **v3** - Name-based using MD5 hash (requires namespace and name)
+- **v4** - Random/pseudo-random generation (most commonly used)
+- **v5** - Name-based using SHA-1 hash (requires namespace and name)
+- **v6** - Time-ordered version of v1 (better for database indexing)
+- **v7** - Unix timestamp-based (newest, sortable by creation time)
+
+<Info>
+UUID v4 is the most widely used version for general purposes. It generates cryptographically strong random identifiers.
+</Info>
+
+### Bulk generation
+
+Generate up to 100 UUIDs at once by setting the quantity field. This is useful when you need multiple unique identifiers for testing or batch operations.
+
+### Namespace-based generation
+
+For v3 and v5, you need to provide a namespace and name:
+
+1. Select a predefined namespace (DNS, URL, OID, or X500)
+2. Or enter a custom namespace UUID
+3. Provide a name string
+4. Generate deterministic UUIDs based on these inputs
+
+<Note>
+The same namespace and name combination will always produce the same UUID. This makes v3 and v5 useful for creating reproducible identifiers.
+</Note>
+
+### Validate and decode
+
+Switch to the Validator/Decoder tab to:
+
+- Verify if a string is a valid UUID format
+- Identify which version the UUID uses
+- Decode time-based UUIDs (v1, v6, v7) to extract:
+  - Timestamp information
+  - Clock sequence (v1, v6)
+  - Node/MAC address (v1, v6)
+  - Variant type
+  - Random data (v7)
+
+<Warning>
+UUIDs v3, v4, and v5 cannot be decoded because they are hash-based (v3/v5) or randomly generated (v4).
+</Warning>
+
+## Copy and download
+
+- Click the copy button next to any UUID to copy it to your clipboard
+- Use "Copy All" to copy all generated UUIDs as a newline-separated list
+- Use "Download" to save all UUIDs to a text file
+
+## Keyboard shortcuts
+
+- **Cmd/Ctrl + Enter** - Generate new UUID(s)
+- **Cmd/Ctrl + C** - Copy most recent UUID
+- **Cmd/Ctrl + Shift + Backspace** - Clear all
+
+## Use cases
+
+### Database primary keys
+
+Use v4 for random primary keys, or v7 for time-sortable keys that improve database indexing performance.
+
+### API request IDs
+
+Generate v4 UUIDs to track requests across distributed systems.
+
+### Content addressing
+
+Use v5 with a URL namespace to create deterministic identifiers for web resources.
+
+<Tip>
+For new applications, consider v7. It combines the benefits of time-based ordering (like v1) with better privacy (no MAC address) and uses standard Unix timestamps.
+</Tip>

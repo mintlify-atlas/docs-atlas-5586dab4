@@ -1,0 +1,160 @@
+---
+title: JSON formatter
+description: Format, validate, and work with JSON data using a comprehensive toolbox with multiple features
+---
+
+The JSON formatter is a comprehensive toolbox that helps you work with JSON data. It provides multiple tools in one interface for formatting, validating, comparing, querying, converting, and validating JSON against schemas.
+
+## Features
+
+The JSON toolbox includes six specialized tools:
+
+### Formatter
+
+Format and validate JSON with multiple output options:
+
+- **Validate** - Check if JSON is valid and properly structured
+- **Pretty print** - Format with indentation for readability
+- **Minify** - Remove all whitespace to reduce size
+- **Sort keys** - Alphabetically order object keys
+- **Escape/unescape** - Convert to/from escaped strings
+- **Base64 encode/decode** - Convert JSON to/from Base64
+
+<Note>
+The formatter automatically detects and reports syntax errors with helpful error messages.
+</Note>
+
+### Tree view
+
+Visualize JSON structure in an interactive tree format:
+
+- Expand and collapse nested objects and arrays
+- Navigate complex data structures easily
+- View the hierarchy at a glance
+- Useful for exploring deeply nested JSON
+
+### Diff
+
+Compare two JSON documents side-by-side:
+
+- Highlight differences between JSON files
+- Identify added, removed, and modified values
+- Compare API responses or configuration files
+- Visual diff highlighting
+
+### Path query
+
+Extract data using JSONPath expressions:
+
+- Query JSON using JSONPath syntax
+- Extract specific values from nested structures
+- Filter and transform data
+- Test JSONPath expressions interactively
+
+<Tip>
+Use JSONPath to extract specific fields from large API responses without manual parsing.
+</Tip>
+
+### Convert
+
+Transform JSON to other formats:
+
+- Convert to YAML, XML, CSV, or other formats
+- Export data in different structures
+- Transform between data formats
+- Useful for data migration and integration
+
+### Schema validation
+
+Validate JSON against JSON Schema:
+
+- Define data structure requirements
+- Validate API responses
+- Ensure data conforms to expected format
+- Get detailed validation errors
+
+## Use cases
+
+### API development
+
+Test and debug API responses:
+
+```json
+{
+  "user": {
+    "id": 123,
+    "name": "John Doe",
+    "email": "john@example.com"
+  },
+  "posts": [
+    {"id": 1, "title": "Hello World"},
+    {"id": 2, "title": "JSON Tips"}
+  ]
+}
+```
+
+### Configuration files
+
+Validate and format configuration files before deployment.
+
+### Data transformation
+
+Convert between JSON and other formats like YAML or XML.
+
+### Testing
+
+Compare expected vs actual API responses using the diff tool.
+
+## Loading data
+
+You can load JSON data in multiple ways:
+
+- **Type or paste** - Enter JSON directly into the editor
+- **Load file** - Upload JSON files from your computer
+- **Examples** - Choose from preset examples to explore features
+
+<Info>
+The toolbox accepts .json, .txt, .geojson, and .jsonl file formats.
+</Info>
+
+## Keyboard shortcuts
+
+The JSON toolbox supports keyboard shortcuts for common actions. The available shortcuts vary by tab:
+
+- **Cmd/Ctrl + Enter** - Execute the current action (format, validate, etc.)
+- **Cmd/Ctrl + K** - Clear all inputs
+- **Cmd/Ctrl + C** - Copy output to clipboard
+
+## Examples
+
+### Simple object
+
+```json
+{"name":"John Doe","age":30,"city":"New York","active":true}
+```
+
+### Array of objects
+
+```json
+[{"id":1,"product":"Laptop","price":999.99},{"id":2,"product":"Mouse","price":29.99}]
+```
+
+### Nested structure
+
+```json
+{"user":{"profile":{"name":"Jane","settings":{"theme":"dark","notifications":true}},"posts":[{"title":"Hello World","tags":["intro","welcome"]}]}}
+```
+
+## Tips
+
+<Tip>
+Use the tree view to explore unfamiliar JSON structures before writing code to parse them.
+</Tip>
+
+<Tip>
+The minify feature is useful when you need to include JSON in URLs or reduce payload size.
+</Tip>
+
+<Tip>
+Load example data to quickly test each tool's capabilities without preparing your own data.
+</Tip>

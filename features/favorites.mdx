@@ -1,0 +1,271 @@
+---
+title: Favorites system
+description: Save your most-used utilities for instant access with the favorites system
+---
+
+The favorites system lets you bookmark your most frequently used utilities for quick access. Favorites are stored locally in your browser or desktop app and sync across tabs.
+
+## Adding a favorite
+
+To add a utility to your favorites:
+
+<Steps>
+  <Step title="Find the utility">
+    Navigate to the homepage or open any utility page.
+  </Step>
+  
+  <Step title="Click the heart icon">
+    Click the heart icon in the top-right corner of any utility card.
+    
+    The heart icon will:
+    - Change from outline to filled
+    - Turn red to indicate it's favorited
+    - Display a red background
+  </Step>
+  
+  <Step title="View your favorites">
+    Your favorites appear in a dedicated section on the homepage, above all other utilities.
+  </Step>
+</Steps>
+
+<Note>
+  Favorites are saved automatically in your browser's localStorage and persist across sessions.
+</Note>
+
+## Removing a favorite
+
+To remove a utility from your favorites:
+
+1. Click the filled red heart icon on any favorited utility card
+2. The utility is immediately removed from your favorites section
+3. The utility returns to its regular category in the "All Utilities" section
+
+## Where favorites appear
+
+Favorites are displayed prominently across all platform versions:
+
+<Tabs>
+  <Tab title="Web version">
+    On the web version, favorites appear in a dedicated section at the top of the homepage with:
+    
+    - A blue border and background to distinguish from other utilities
+    - A heart icon header with "Your Favourites" title
+    - Description: "Quick access to your most-used utilities"
+    - Grid layout matching the main utilities grid
+    
+    The favorites section only appears if you have at least one favorited utility.
+  </Tab>
+  
+  <Tab title="Desktop app">
+    In the desktop app, favorites appear in two places:
+    
+    1. **Homepage section**: A compact grid at the top showing all favorites
+    2. **Sidebar**: Favorites are listed first in a dedicated "Favourites" section above categorized utilities
+    
+    The sidebar favorites section includes:
+    - Section header: "FAVOURITES" in uppercase
+    - Icon and utility name for each favorite
+    - Active state highlighting for the current utility
+  </Tab>
+  
+  <Tab title="Extension">
+    In the Chrome extension, favorites appear:
+    
+    1. **Main view**: Compact grid at the top of the utilities list
+    2. **Sidebar** (on larger screens): Quick links to your top 6 favorites
+    3. **Category filter aware**: Favorites respect the active category filter
+    
+    The sidebar shows up to 6 favorites with icons and truncated names.
+  </Tab>
+</Tabs>
+
+## Storage and syncing
+
+Favorites are stored using the following mechanism:
+
+### Storage location
+
+```typescript
+const FAVORITES_STORAGE_KEY = "try-devutils-favourites";
+```
+
+Favorites are stored in `localStorage` as a JSON array of utility IDs:
+
+```json
+["json", "base64", "uuid", "regex"]
+```
+
+### Cross-tab syncing
+
+The desktop app includes automatic syncing across multiple windows:
+
+```tsx
+// From DesktopLayout.tsx:46-50
+useEffect(() => {
+  const handleStorage = () => setFavourites(getFavorites());
+  window.addEventListener("storage", handleStorage);
+  return () => window.removeEventListener("storage", handleStorage);
+}, []);
+```
+
+When you add or remove a favorite in one window, all other windows automatically update to reflect the change.
+
+<Info>
+  The storage event only fires for changes in *other* tabs/windows. Changes in the current window are handled by the local state update.
+</Info>
+
+## Visual indicators
+
+Favorites have distinct visual styling to help you identify them:
+
+### Favorited state
+
+- **Heart icon**: Filled with red color (`fill-current` class)
+- **Icon background**: Red background with opacity (`bg-red-500/10`)
+- **Icon color**: Bright red (`text-red-500`)
+
+### Non-favorited state
+
+- **Heart icon**: Outline only (no fill)
+- **Icon color**: Muted gray with low opacity (`text-muted-foreground/30` or `text-muted-foreground/40`)
+- **Hover effect**: Turns red on hover
+
+## Layout differences by platform
+
+### Web cards (standard layout)
+
+Favorite cards on the web version use the standard card layout:
+
+```tsx
+// From Index.tsx:73-100
+<Link to={`/${util.id}`} className="...p-6...">
+  {/* Heart icon in top-right */}
+  <button className="absolute top-2 right-2...">
+    <Heart className={`h-4 w-4 ${isFavourite ? "fill-current" : ""}`} />
+  </button>
+  
+  {/* Icon, title, description */}
+</Link>
+```
+
+### Desktop/extension cards (compact layout)
+
+The desktop and extension versions use a more compact card design:
+
+```tsx
+// From Index.tsx:40-69
+<Link to={`/${util.id}`} className="...p-4...">
+  {/* Smaller heart icon */}
+  <button className="absolute top-1.5 right-1.5...">
+    <Heart className={`h-3.5 w-3.5 ${isFavourite ? "fill-current" : ""}`} />
+  </button>
+  
+  {/* Compact layout with centered icon */}
+</Link>
+```
+
+## Favorites count badge
+
+The favorites section header includes a count badge showing how many utilities you've favorited:
+
+```tsx
+<span className="text-[11px] text-muted-foreground/60 bg-muted/50 px-1.5 py-0.5 rounded-full">
+  {favouriteUtils.length}
+</span>
+```
+
+This helps you quickly see how many favorites you have at a glance.
+
+## Search and filtering
+
+In the Chrome extension, favorites respect the active category filter and search query:
+
+```tsx
+// From Index.tsx:156-162
+const filteredFavourites = favouriteUtils
+  .filter(matchesQuery)
+  .filter(matchesCategory);
+```
+
+This means if you:
+- Select a specific category, only favorites in that category are shown
+- Enter a search query, only matching favorites appear
+
+## Implementation details
+
+### Helper functions
+
+The favorites system uses two helper functions:
+
+<CodeGroup>
+
+```typescript getFavorites()
+function getFavorites(): string[] {
+  try {
+    const stored = localStorage.getItem(FAVORITES_STORAGE_KEY);
+    return stored ? JSON.parse(stored) : [];
+  } catch {
+    return [];  // Graceful fallback if localStorage is unavailable
+  }
+}
+```
+
+```typescript saveFavorites()
+function saveFavorites(favorites: string[]) {
+  localStorage.setItem(FAVORITES_STORAGE_KEY, JSON.stringify(favorites));
+}
+```
+
+</CodeGroup>
+
+### Toggle logic
+
+Toggling a favorite is handled with this logic:
+
+```tsx
+const toggleFavourite = (utilId: string) => {
+  setFavourites((prev) => {
+    const newFavourites = prev.includes(utilId)
+      ? prev.filter((id) => id !== utilId)  // Remove if exists
+      : [...prev, utilId];                   // Add if doesn't exist
+    saveFavorites(newFavourites);
+    return newFavourites;
+  });
+};
+```
+
+## Privacy considerations
+
+<Warning>
+  Favorites are stored in localStorage, which means they are specific to your browser/device and are not synced across different browsers or devices.
+</Warning>
+
+Because TryDevUtils is privacy-focused:
+
+- Favorites are **never sent to any server**
+- Favorites are **stored only on your device**
+- Favorites **do not require an account**
+- Clearing your browser data will remove your favorites
+
+## Tips and tricks
+
+<Tip>
+  Organize your workflow by favoriting the 3-5 utilities you use most often. This creates a personalized quick-access section at the top of your homepage.
+</Tip>
+
+<Tip>
+  In the desktop app, favorites appear in the sidebar for even faster access. You can click a favorite in the sidebar to instantly switch utilities without returning to the homepage.
+</Tip>
+
+<Tip>
+  Use favorites strategically for utilities you need frequently throughout the day, such as Base64 Converter, JSON Toolbox, or UUID Generator.
+</Tip>
+
+## Source code reference
+
+The favorites implementation can be found in:
+
+- Storage key constant: `/src/pages/Index.tsx:8`
+- Helper functions: `/src/pages/Index.tsx:10-21`
+- Toggle logic: `/src/pages/Index.tsx:118-126`
+- Desktop sidebar favorites: `/src/components/DesktopLayout.tsx:15-24` and `/src/components/DesktopLayout.tsx:234-256`

@@ -1,0 +1,133 @@
+---
+title: Text Diff Checker
+description: Compare two text blocks and visualize the differences with line-by-line or word-by-word comparison
+---
+
+The Text Diff Checker utility helps you identify differences between two versions of text. It provides both line-level and word-level comparison modes, making it easy to track changes in documents, code, or any text content.
+
+## Features
+
+### Comparison modes
+
+Choose between two comparison modes based on your needs:
+
+**Line Diff**: Compares text line by line, perfect for:
+- Reviewing code changes
+- Comparing configuration files
+- Analyzing document revisions
+- Tracking multi-line text modifications
+
+**Word Diff**: Compares text word by word, ideal for:
+- Reviewing sentence changes
+- Comparing short text snippets
+- Identifying small edits in paragraphs
+- Analyzing single-line modifications
+
+<Tip>
+  Use Line Diff for structured content like code or configuration files. Use Word Diff for prose, documentation, or single-line comparisons.
+</Tip>
+
+### Visual difference highlighting
+
+The utility displays differences with clear color-coded highlighting:
+
+- **Green background**: Added content (present in modified text, absent in original)
+- **Red background**: Removed content (present in original text, absent in modified)
+- **White background**: Unchanged content (identical in both versions)
+
+Each line in the diff output includes a prefix:
+- `+ ` for added lines/words
+- `- ` for removed lines/words  
+- `  ` (two spaces) for unchanged lines/words
+
+## Use cases
+
+### Code review
+
+Compare different versions of source code to understand what changed:
+
+```javascript
+// Original
+function calculateTotal(price, tax) {
+  return price + tax;
+}
+
+// Modified
+function calculateTotal(price, tax, discount) {
+  return price + tax - discount;
+}
+```
+
+The diff will highlight the added `discount` parameter and the modified return statement.
+
+### Document comparison
+
+Track changes in documentation, articles, or any text content:
+
+- Compare draft versions
+- Review editorial changes
+- Verify translations
+- Check content updates
+
+<Info>
+  The diff algorithm used is the Myers diff algorithm, which is the same algorithm used by Git for showing file changes.
+</Info>
+
+### Configuration validation
+
+Compare configuration files to ensure correct settings:
+
+- Review environment-specific configs
+- Verify deployment configurations
+- Compare backup and production settings
+- Audit configuration changes
+
+### Data verification
+
+Validate data transformations or migrations:
+
+- Compare JSON/XML before and after transformation
+- Verify data format conversions
+- Check API response changes
+- Validate data cleaning operations
+
+<Note>
+  Both text areas support multi-line input. Press Cmd/Ctrl+Enter to trigger the comparison, or Cmd/Ctrl+K to clear all fields.
+</Note>
+
+## Understanding the diff output
+
+### Line diff format
+
+In line diff mode, each line is compared independently:
+
+```
+  Line that exists in both versions
+- Line that was removed from the original
++ Line that was added in the modified version
+  Another unchanged line
+```
+
+### Word diff format
+
+In word diff mode, changes within lines are highlighted at the word level:
+
+```
+The quick brown fox jumps
+The quick red fox runs
+```
+
+Will show "brown" in red (removed) and "red" in green (added), along with "jumps" in red and "runs" in green.
+
+### Empty lines and whitespace
+
+The diff checker preserves:
+- Empty lines in the original text
+- Leading and trailing whitespace
+- Multiple consecutive spaces
+
+This makes it suitable for comparing code where whitespace matters.
+
+<Warning>
+  Line diff compares entire lines as units. A small change in a long line will mark the entire line as different. Use word diff for more granular comparison.
+</Warning>

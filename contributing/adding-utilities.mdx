@@ -1,0 +1,313 @@
+---
+title: Adding utilities
+description: Step-by-step guide to creating and registering new developer utilities in TryDevUtils
+---
+
+Adding a new utility to TryDevUtils involves creating a React component and registering it in the utilities system. This guide walks you through the entire process.
+
+## Understanding the architecture
+
+TryDevUtils uses a modular architecture for utilities:
+
+- **Utility components** - Individual tools in `src/components/utils/`
+- **Utility registry** - Central registration in `src/lib/utils.ts`
+- **Lazy loading** - Performance optimization in `src/lib/lazyUtils.ts`
+- **Categories** - Tools organized by type (Encoding & Decoding, Formatting & Validation, etc.)
+
+## Creating a new utility
+
+<Steps>
+  <Step title="Create the component file">
+    Create a new file in `src/components/utils/` with a descriptive name:
+
+    ```bash
+    touch src/components/utils/YourUtility.tsx
+    ```
+
+    Use PascalCase for the filename (e.g., `Base64Converter.tsx`, `HashGenerator.tsx`).
+  </Step>
+
+  <Step title="Define the component interface">
+    Your utility component should accept these props:
+
+    ```tsx
+    interface YourUtilityProps {
+      initialContent?: string;  // Pre-populated content
+      action?: string;          // Suggested action (e.g., "decode")
+      navigate?: (id: string | null) => void;  // Cross-navigation
+    }
+    ```
+
+    These props enable deep linking and cross-utility navigation.
+  </Step>
+
+  <Step title="Build the component">
+    Structure your component with these recommended elements:
+
+    ```tsx
+    import { useState, useCallback } from "react";
+    import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+    import { Textarea } from "@/components/ui/textarea";
+    import { Button } from "@/components/ui/button";
+    import { YourIcon } from "lucide-react";
+    import { useToast } from "@/hooks/use-toast";
+    import { useUtilKeyboardShortcuts } from "@/components/KeyboardShortcuts";
+    import { CopyButton } from "@/components/ui/copy-button";
+
+    export function YourUtility({ initialContent, action, navigate }: YourUtilityProps) {
+      const [input, setInput] = useState(initialContent || "");
+      const [output, setOutput] = useState("");
+      const [error, setError] = useState("");
+      const { toast } = useToast();
+
+      const processInput = useCallback(() => {
+        try {
+          setError("");
+          // Your logic here
+          const result = yourProcessingFunction(input);
+          setOutput(result);
+        } catch (err) {
+          setError("Error message");
+          setOutput("");
+        }
+      }, [input]);
+
+      const clearAll = useCallback(() => {
+        setInput("");
+        setOutput("");
+        setError("");
+      }, []);
+
+      // Keyboard shortcuts
+      useUtilKeyboardShortcuts({
+        onExecute: processInput,
+        onClear: clearAll,
+        onCopy: async () => {
+          if (output) await navigator.clipboard.writeText(output);
+        },
+      });
+
+      return (
+        <Card className="tool-card">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 text-foreground">
+              <YourIcon className="h-5 w-5 text-dev-primary" />
+              Your Utility Name
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            {/* Your UI here */}
+          </CardContent>
+        </Card>
+      );
+    }
+    ```
+
+    **Key components to use:**
+    - `Card`, `CardHeader`, `CardTitle`, `CardContent` - Layout structure
+    - `Textarea` - Multi-line text input
+    - `Input` - Single-line input fields
+    - `Button` - Action buttons
+    - `Tabs` - Multiple modes/views
+    - `CopyButton` - Copy-to-clipboard functionality
+    - `useToast` - User notifications
+    - `useUtilKeyboardShortcuts` - Standard keyboard shortcuts
+  </Step>
+
+  <Step title="Add lazy loading export">
+    Add your utility to `src/lib/lazyUtils.ts`:
+
+    ```tsx
+    // In the utilImports object:
+    const utilImports = {
+      // ... existing imports
+      yourid: () => import("@/components/utils/YourUtility"),
+    } as const;
+
+    // At the bottom of the file:
+    export const LazyYourUtility = lazy(() => 
+      utilImports.yourid().then(m => ({ default: m.YourUtility }))
+    );
+    ```
+
+    Use a short, descriptive ID in lowercase (e.g., `base64`, `hash`, `jwt`).
+  </Step>
+
+  <Step title="Register in the utilities array">
+    Add your utility to the `utils` array in `src/lib/utils.ts`:
+
+    ```tsx
+    // Import the lazy component
+    import { LazyYourUtility } from "@/lib/lazyUtils";
+    import { YourIcon } from "lucide-react";
+
+    // Add to utils array
+    export const utils: Util[] = [
+      // ... existing utilities
+      {
+        id: "yourid",
+        label: "Your Utility Name",
+        icon: YourIcon,
+        component: LazyYourUtility,
+        description: "Brief description of what it does",
+        color: "from-blue-500 to-blue-600",
+        textColor: "text-blue-600",
+        bgColor: "bg-blue-500/10",
+        category: "Encoding & Decoding", // Choose appropriate category
+      },
+    ];
+    ```
+
+    **Available categories:**
+    - `"Encoding & Decoding"` - Format conversions, encoding/decoding
+    - `"Formatting & Validation"` - Code formatters, validators
+    - `"Generators"` - Generate UUIDs, hashes, keys, etc.
+    - `"Text & Diff"` - Text analysis and comparison
+    - `"Security & Crypto"` - Security-related tools
+    - `"Reference"` - Lookup tables and references
+
+    **Color guidelines:**
+    - Choose a unique color gradient not used by similar utilities
+    - Use Tailwind color classes (e.g., `from-rose-500 to-rose-600`)
+    - Maintain consistency across `color`, `textColor`, and `bgColor`
+  </Step>
+
+  <Step title="Choose an icon">
+    Select an appropriate icon from [Lucide React](https://lucide.dev/icons):
+
+    ```tsx
+    import { YourIcon } from "lucide-react";
+    ```
+
+    **Icon selection tips:**
+    - Choose icons that clearly represent the tool's purpose
+    - Avoid icons already used by similar utilities
+    - Common choices: `Hash`, `Key`, `Braces`, `FileCode`, `Link`, etc.
+  </Step>
+
+  <Step title="Test your utility">
+    Test your new utility thoroughly:
+
+    ```bash
+    npm run dev           # Start dev server
+    npm run check         # Type check
+    npm run lint          # Check code style
+    ```
+
+    **Testing checklist:**
+    - Utility appears in the correct category
+    - Icon and colors display correctly
+    - Input/output functionality works
+    - Error handling works properly
+    - Keyboard shortcuts work (Cmd/Ctrl+Enter, Cmd/Ctrl+K, Cmd/Ctrl+C)
+    - Toast notifications appear
+    - Responsive design works on mobile
+  </Step>
+</Steps>
+
+## Best practices
+
+### Component structure
+
+- Use functional components with hooks
+- Implement `useCallback` for event handlers to prevent unnecessary re-renders
+- Use `useState` for local component state
+- Handle errors gracefully with try-catch blocks
+- Provide clear error messages to users
+
+### User experience
+
+- **Input validation** - Validate user input and show helpful error messages
+- **Loading states** - Show loading indicators for async operations
+- **Empty states** - Provide guidance when there's no input or output
+- **Examples** - Include example inputs to help users get started
+- **Keyboard shortcuts** - Implement standard shortcuts using `useUtilKeyboardShortcuts`
+  - `Cmd/Ctrl+Enter` - Execute/process
+  - `Cmd/Ctrl+K` - Clear all
+  - `Cmd/Ctrl+C` - Copy output
+- **Copy buttons** - Use `CopyButton` component for easy copying
+- **Toast notifications** - Confirm actions with toast messages
+
+### Performance
+
+- **Lazy loading** - Always register lazy imports in `lazyUtils.ts`
+- **Debouncing** - Debounce expensive operations (see `HashGenerator` example)
+- **Dynamic imports** - Load heavy libraries dynamically when needed
+- **Memoization** - Use `useMemo` for expensive calculations
+
+### Accessibility
+
+- Use semantic HTML elements
+- Include proper labels for inputs
+- Maintain sufficient color contrast
+- Support keyboard navigation
+- Provide descriptive button text
+
+## Example: studying existing utilities
+
+Look at these utilities as examples:
+
+- **Simple conversion** - `Base64Converter.tsx` - Basic encode/decode pattern
+- **Async operations** - `HashGenerator.tsx` - Dynamic imports and loading states
+- **Multiple tabs** - `JsonFormatter.tsx` - Complex multi-tab interface
+- **Reference tool** - `HttpStatusCodeReference.tsx` - Lookup table pattern
+
+## Common patterns
+
+### Tabs for multiple modes
+
+```tsx
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+
+<Tabs value={activeTab} onValueChange={setActiveTab}>
+  <TabsList className="grid w-full grid-cols-2">
+    <TabsTrigger value="mode1">Mode 1</TabsTrigger>
+    <TabsTrigger value="mode2">Mode 2</TabsTrigger>
+  </TabsList>
+  <TabsContent value="mode1">
+    {/* Mode 1 UI */}
+  </TabsContent>
+  <TabsContent value="mode2">
+    {/* Mode 2 UI */}
+  </TabsContent>
+</Tabs>
+```
+
+### Copy button with output
+
+```tsx
+import { CopyButton } from "@/components/ui/copy-button";
+
+<div className="relative">
+  <Textarea value={output} readOnly className="pr-16" />
+  <CopyButton
+    text={output}
+    className="absolute right-2 top-2"
+    title="Copy output"
+  />
+</div>
+```
+
+### Dynamic library imports
+
+```tsx
+const [library, setLibrary] = useState<typeof import("library") | null>(null);
+
+useEffect(() => {
+  import("library").then(module => setLibrary(module));
+}, []);
+```
+
+## Next steps
+
+After creating your utility:
+
+1. Test it thoroughly across different browsers
+2. Add examples to help users understand how to use it
+3. Consider cross-linking with related utilities
+4. Submit a pull request with a clear description
+5. Respond to code review feedback
+
+<Card title="Code style guidelines" icon="code" href="/contributing/code-style">
+  Ensure your code follows our style guidelines and conventions
+</Card>

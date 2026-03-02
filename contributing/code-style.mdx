@@ -1,0 +1,535 @@
+---
+title: Code style
+description: Coding standards, conventions, and best practices for TryDevUtils contributions
+---
+
+TryDevUtils follows consistent coding standards to maintain code quality and readability. This guide covers the style guidelines and best practices you should follow when contributing.
+
+## TypeScript configuration
+
+The project uses TypeScript with specific compiler options:
+
+```json
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"]
+    },
+    "noImplicitAny": false,
+    "noUnusedParameters": false,
+    "skipLibCheck": true,
+    "allowJs": true,
+    "noUnusedLocals": false,
+    "strictNullChecks": false
+  }
+}
+```
+
+### Import paths
+
+Use the `@/` alias for imports from the `src/` directory:
+
+```tsx
+// Good
+import { Card } from "@/components/ui/card";
+import { utils } from "@/lib/utils";
+
+// Avoid
+import { Card } from "../../components/ui/card";
+```
+
+### Type annotations
+
+While `noImplicitAny` is disabled, you should still add type annotations for clarity:
+
+```tsx
+// Good
+interface UtilityProps {
+  initialContent?: string;
+  action?: string;
+}
+
+const [input, setInput] = useState<string>("");
+
+// Less clear
+const [input, setInput] = useState("");
+```
+
+## ESLint configuration
+
+The project uses ESLint with these rules:
+
+```javascript
+{
+  extends: [
+    js.configs.recommended,
+    ...tseslint.configs.recommended
+  ],
+  plugins: {
+    "react-hooks": reactHooks,
+    "react-refresh": reactRefresh,
+  },
+  rules: {
+    ...reactHooks.configs.recommended.rules,
+    "react-refresh/only-export-components": ["warn", { 
+      allowConstantExport: true 
+    }],
+    "@typescript-eslint/no-unused-vars": "off",
+  }
+}
+```
+
+### Running linting
+
+```bash
+npm run lint  # Check for style issues
+```
+
+Fix any linting errors before submitting a pull request.
+
+## React and hooks conventions
+
+### Component structure
+
+Organize your components in this order:
+
+```tsx
+// 1. Imports
+import { useState, useEffect, useCallback } from "react";
+import { Card } from "@/components/ui/card";
+import { ExternalLib } from "external-lib";
+
+// 2. Interfaces/Types
+interface ComponentProps {
+  prop1: string;
+  prop2?: number;
+}
+
+// 3. Component definition
+export function ComponentName({ prop1, prop2 }: ComponentProps) {
+  // 4. Hooks (in order: state, effects, callbacks)
+  const [state, setState] = useState("");
+  const { toast } = useToast();
+  
+  const handleAction = useCallback(() => {
+    // Logic here
+  }, [dependencies]);
+  
+  useEffect(() => {
+    // Side effects
+  }, [dependencies]);
+  
+  // 5. Render
+  return (
+    <div>{/* JSX */}</div>
+  );
+}
+```
+
+### React hooks rules
+
+Follow the [Rules of Hooks](https://react.dev/reference/rules/rules-of-hooks):
+
+- Call hooks at the top level (not inside loops or conditions)
+- Only call hooks from React functions
+- Use ESLint plugin to catch violations
+
+### useCallback and useMemo
+
+Use `useCallback` for event handlers and `useMemo` for expensive calculations:
+
+```tsx
+// Event handlers
+const handleSubmit = useCallback(() => {
+  processData(input);
+}, [input]);
+
+// Expensive calculations
+const processedData = useMemo(() => {
+  return expensiveOperation(data);
+}, [data]);
+```
+
+### Custom hooks
+
+Use provided custom hooks for common functionality:
+
+```tsx
+// Keyboard shortcuts
+import { useUtilKeyboardShortcuts } from "@/components/KeyboardShortcuts";
+
+useUtilKeyboardShortcuts({
+  onExecute: handleExecute,
+  onClear: handleClear,
+  onCopy: handleCopy,
+});
+
+// Toast notifications
+import { useToast } from "@/hooks/use-toast";
+
+const { toast } = useToast();
+
+toast({
+  title: "Success",
+  description: "Operation completed",
+});
+```
+
+## Naming conventions
+
+### Files and directories
+
+- **Components** - PascalCase: `Base64Converter.tsx`, `HashGenerator.tsx`
+- **Utilities** - camelCase: `utils.ts`, `lazyUtils.ts`
+- **Types** - PascalCase: `types.ts` (export PascalCase types)
+- **Hooks** - camelCase with `use` prefix: `useToast.ts`
+
+### Variables and functions
+
+```tsx
+// Component names - PascalCase
+export function Base64Converter() {}
+
+// Functions - camelCase
+const processInput = () => {};
+const handleClick = () => {};
+
+// Constants - camelCase or UPPER_CASE
+const maxLength = 100;
+const API_ENDPOINT = "https://api.example.com";
+
+// State variables - descriptive camelCase
+const [isLoading, setIsLoading] = useState(false);
+const [userData, setUserData] = useState(null);
+
+// Boolean variables - prefix with is/has/should
+const isValid = true;
+const hasError = false;
+const shouldRender = true;
+```
+
+### Interfaces and types
+
+```tsx
+// Interface names - PascalCase with descriptive suffix
+interface UtilityProps {
+  initialContent?: string;
+}
+
+interface HashResult {
+  md5: string;
+  sha1: string;
+}
+
+type UtilCategory = "Encoding & Decoding" | "Formatting & Validation";
+```
+
+## Component styling
+
+### Tailwind CSS
+
+Use Tailwind utility classes for styling:
+
+```tsx
+// Good - semantic utility classes
+<Card className="tool-card">
+  <CardHeader>
+    <CardTitle className="flex items-center gap-2 text-foreground">
+      <Icon className="h-5 w-5 text-dev-primary" />
+      Title
+    </CardTitle>
+  </CardHeader>
+  <CardContent className="space-y-4">
+    {/* Content */}
+  </CardContent>
+</Card>
+```
+
+### Design tokens
+
+Use semantic color tokens:
+
+- `text-foreground` - Primary text color
+- `text-muted-foreground` - Secondary text color
+- `bg-muted` - Muted background
+- `border-border` - Border color
+- `text-dev-primary` - Brand primary color
+- `bg-dev-primary` - Brand primary background
+- `text-destructive` - Error text
+
+### Spacing and layout
+
+```tsx
+// Consistent spacing
+<div className="space-y-4">      {/* Vertical spacing */}
+<div className="flex gap-2">       {/* Horizontal spacing */}
+<div className="p-4">              {/* Padding */}
+<div className="mb-2">             {/* Margin bottom */}
+```
+
+## Error handling
+
+### Try-catch blocks
+
+Handle errors gracefully and provide user-friendly messages:
+
+```tsx
+const processInput = useCallback(() => {
+  try {
+    setError("");
+    const result = dangerousOperation(input);
+    setOutput(result);
+  } catch (err) {
+    setError("Failed to process input. Please check your data.");
+    setOutput("");
+    console.error("Processing error:", err);
+  }
+}, [input]);
+```
+
+### Error display
+
+```tsx
+{error && (
+  <div className="text-destructive text-sm font-medium">
+    {error}
+  </div>
+)}
+```
+
+### Toast for user feedback
+
+```tsx
+try {
+  await navigator.clipboard.writeText(output);
+  toast({
+    title: "Copied!",
+    description: "Output copied to clipboard",
+  });
+} catch (err) {
+  toast({
+    title: "Failed to copy",
+    description: "Could not copy to clipboard",
+    variant: "destructive",
+  });
+}
+```
+
+## Code comments
+
+### When to comment
+
+```tsx
+// Good - explain complex logic
+// Generate bcrypt hash asynchronously to avoid blocking UI
+if (bcryptLib) {
+  setIsGeneratingBcrypt(true);
+  bcryptLib.hash(input, saltRounds).then(...);
+}
+
+// Good - document non-obvious behavior
+// Remove from cache on error so it can be retried
+prefetchCache.delete(utilId);
+
+// Unnecessary - code is self-explanatory
+// Set the input value
+setInput(value);
+```
+
+### JSX comments
+
+```tsx
+{/* Main content area */}
+<CardContent className="space-y-4">
+  {/* Cross-link to related tools */}
+  {navigate && (
+    <div>...</div>
+  )}
+</CardContent>
+```
+
+## Performance considerations
+
+### Lazy loading
+
+Always register utilities in `lazyUtils.ts` for code splitting:
+
+```tsx
+const utilImports = {
+  yourtool: () => import("@/components/utils/YourTool"),
+} as const;
+
+export const LazyYourTool = lazy(() => 
+  utilImports.yourtool().then(m => ({ default: m.YourTool }))
+);
+```
+
+### Dynamic imports
+
+Load heavy libraries only when needed:
+
+```tsx
+const [cryptoJS, setCryptoJS] = useState<typeof import("crypto-js") | null>(null);
+
+useEffect(() => {
+  import("crypto-js").then(module => {
+    setCryptoJS(module.default);
+  });
+}, []);
+```
+
+### Debouncing
+
+Debounce expensive operations:
+
+```tsx
+useEffect(() => {
+  const timeoutId = setTimeout(() => {
+    expensiveOperation(input);
+  }, 300); // 300ms debounce
+
+  return () => clearTimeout(timeoutId);
+}, [input]);
+```
+
+## Testing
+
+### Pre-commit checklist
+
+Before committing, run:
+
+```bash
+npm run check  # Type check + build
+npm run lint   # Linting
+npm run test   # Playwright tests
+```
+
+### Manual testing
+
+Test your utility:
+
+- ✅ Works with valid input
+- ✅ Handles invalid input gracefully
+- ✅ Error messages are clear
+- ✅ Keyboard shortcuts work
+- ✅ Copy buttons work
+- ✅ Responsive on mobile devices
+- ✅ Toast notifications appear
+- ✅ Loading states display correctly
+
+## Git conventions
+
+### Commit messages
+
+Write clear, descriptive commit messages:
+
+```bash
+# Good
+git commit -m "Add YAML validator utility"
+git commit -m "Fix Base64 encoding for Unicode characters"
+git commit -m "Update Hash Generator with bcrypt support"
+
+# Less clear
+git commit -m "Add stuff"
+git commit -m "Fix bug"
+git commit -m "Update"
+```
+
+### Branch names
+
+Use descriptive branch names:
+
+```bash
+feature/yaml-validator
+fix/base64-unicode-encoding
+enhancement/hash-generator-bcrypt
+```
+
+## Accessibility
+
+### Labels and ARIA attributes
+
+```tsx
+// Good - proper label association
+<label htmlFor="input-field" className="block text-sm font-medium mb-2">
+  Input Label
+</label>
+<Input id="input-field" />
+
+// Good - ARIA label for icon buttons
+<Button aria-label="Copy to clipboard">
+  <Copy className="h-4 w-4" />
+</Button>
+```
+
+### Keyboard navigation
+
+- Ensure all interactive elements are keyboard accessible
+- Implement standard keyboard shortcuts
+- Use semantic HTML (`<button>`, `<input>`, etc.)
+- Maintain logical tab order
+
+### Color contrast
+
+Use semantic color tokens to maintain proper contrast ratios:
+
+```tsx
+// Good - uses semantic tokens that adapt to theme
+<div className="text-foreground bg-background">
+<div className="text-muted-foreground">
+
+// Avoid - hardcoded colors may have poor contrast
+<div className="text-gray-500 bg-white">
+```
+
+## Documentation
+
+### Code documentation
+
+- Add JSDoc comments for exported functions
+- Document complex interfaces
+- Explain non-obvious behavior
+- Include usage examples for utilities
+
+### Component props documentation
+
+```tsx
+/**
+ * Base64 encoder and decoder utility
+ * 
+ * @param initialContent - Pre-populated content to encode/decode
+ * @param action - Suggested action: "encode" or "decode"
+ * @param navigate - Function to navigate to other utilities
+ */
+export function Base64Converter({ 
+  initialContent, 
+  action, 
+  navigate 
+}: Base64ConverterProps) {
+  // ...
+}
+```
+
+## Summary checklist
+
+Before submitting your contribution:
+
+- ✅ Code follows TypeScript and React conventions
+- ✅ Uses `@/` import alias
+- ✅ Implements proper error handling
+- ✅ Follows naming conventions
+- ✅ Uses Tailwind CSS utility classes
+- ✅ Includes proper TypeScript types
+- ✅ Passes `npm run lint`
+- ✅ Passes `npm run check`
+- ✅ Passes `npm run test`
+- ✅ Tested manually in browser
+- ✅ Keyboard shortcuts implemented
+- ✅ Accessible to keyboard users
+- ✅ Responsive on mobile devices
+- ✅ Clear commit messages
+
+<Card title="Adding utilities" icon="plus" href="/contributing/adding-utilities">
+  Ready to build? Learn how to create and register new utilities
+</Card>

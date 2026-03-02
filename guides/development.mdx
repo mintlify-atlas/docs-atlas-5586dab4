@@ -1,0 +1,269 @@
+---
+title: Development setup
+description: Set up your local development environment for TryDevUtils
+---
+
+This guide walks you through setting up your local development environment for contributing to TryDevUtils.
+
+## Prerequisites
+
+Before you begin, ensure you have the following installed:
+
+<Steps>
+  <Step title="Install Node.js">
+    You need Node.js version 20 or higher. Download it from [nodejs.org](https://nodejs.org/).
+
+    ```bash
+    node --version  # Should be v20.x or higher
+    ```
+  </Step>
+
+  <Step title="Install Git">
+    Install Git for version control. Download it from [git-scm.com](https://git-scm.com/).
+
+    ```bash
+    git --version
+    ```
+  </Step>
+
+  <Step title="Install Rust (optional)">
+    Only required if you plan to work on the Tauri desktop app. Install from [rustup.rs](https://rustup.rs/).
+
+    ```bash
+    rustc --version
+    cargo --version
+    ```
+  </Step>
+</Steps>
+
+## Clone the repository
+
+Clone the TryDevUtils repository to your local machine:
+
+```bash
+git clone https://github.com/yourusername/trydevutils.git
+cd trydevutils
+```
+
+## Install dependencies
+
+Install all npm dependencies:
+
+```bash
+npm install
+```
+
+This installs all packages defined in `package.json`, including:
+- React and React DOM
+- TypeScript
+- Vite (build tool)
+- Playwright (testing)
+- ESLint (linting)
+- Radix UI components
+- Tauri CLI (desktop app)
+
+## Development servers
+
+You can run different development servers depending on what you're working on.
+
+### Web app
+
+Start the web development server:
+
+<CodeGroup>
+```bash npm
+npm run dev
+```
+
+```bash Details
+# Runs: vite
+# Server: http://localhost:8080
+# Hot reload: Enabled
+```
+</CodeGroup>
+
+The web app runs on port 8080 by default. Open [http://localhost:8080](http://localhost:8080) in your browser.
+
+### Desktop app (Tauri)
+
+Start the Tauri development server:
+
+<CodeGroup>
+```bash npm
+npm run tauri:dev
+```
+
+```bash Details
+# Runs: npm run sync:version && tauri dev
+# Opens desktop window automatically
+# Hot reload: Enabled for frontend
+```
+</CodeGroup>
+
+<Warning>
+  Tauri development requires Rust and platform-specific toolchains. See the [Tauri prerequisites guide](https://tauri.app/v1/guides/getting-started/prerequisites) for your operating system.
+</Warning>
+
+### Chrome extension
+
+Build the extension and load it in Chrome:
+
+<Steps>
+  <Step title="Build the extension">
+    ```bash
+    npm run extension:prepare
+    ```
+
+    This builds the extension to `dist-extension/` with the manifest and icons.
+  </Step>
+
+  <Step title="Load in Chrome">
+    1. Open Chrome and navigate to `chrome://extensions/`
+    2. Enable "Developer mode" (toggle in top-right)
+    3. Click "Load unpacked"
+    4. Select the `dist-extension/` directory
+  </Step>
+
+  <Step title="Test the extension">
+    Click the TryDevUtils icon in your Chrome toolbar to open the extension.
+  </Step>
+</Steps>
+
+## Project structure
+
+Understand the key directories in the project:
+
+```
+trydevutils/
+├── src/                  # Web app source code
+│   ├── components/       # React components
+│   ├── lib/             # Utility functions
+│   └── App.tsx          # Main app component
+├── src-tauri/           # Tauri desktop app
+│   ├── src/             # Rust source code
+│   ├── Cargo.toml       # Rust dependencies
+│   └── tauri.conf.json  # Tauri configuration
+├── extension/           # Chrome extension files
+│   ├── manifest.json    # Extension manifest
+│   ├── icons/          # Extension icons
+│   └── background.ts    # Background script
+├── tests/              # Playwright tests
+└── public/             # Static assets
+```
+
+## Environment variables
+
+TryDevUtils doesn't require environment variables for local development. All utilities run entirely in the browser without external API calls.
+
+If you need to configure Vite, you can create a `.env` file:
+
+```bash
+# .env
+VITE_APP_VERSION=0.1.4
+```
+
+## Code quality tools
+
+### Type checking
+
+Run TypeScript type checking:
+
+```bash
+npm run check
+```
+
+This runs `tsc && vite build` to verify types and build the project.
+
+### Linting
+
+Run ESLint to check code quality:
+
+```bash
+npm run lint
+```
+
+The project uses:
+- ESLint with TypeScript support
+- React Hooks linting
+- React Refresh linting
+
+Configuration: `eslint.config.js`
+
+## Development workflow
+
+Follow this workflow when developing new features:
+
+<Steps>
+  <Step title="Create a branch">
+    ```bash
+    git checkout -b feature/your-feature-name
+    ```
+  </Step>
+
+  <Step title="Start the dev server">
+    ```bash
+    npm run dev
+    ```
+  </Step>
+
+  <Step title="Make your changes">
+    Edit files in `src/`. Changes hot-reload automatically.
+  </Step>
+
+  <Step title="Test locally">
+    Run the test suite:
+    ```bash
+    npm run test
+    ```
+  </Step>
+
+  <Step title="Check types and lint">
+    ```bash
+    npm run check
+    npm run lint
+    ```
+  </Step>
+
+  <Step title="Commit your changes">
+    ```bash
+    git add .
+    git commit -m "Add your feature"
+    git push origin feature/your-feature-name
+    ```
+  </Step>
+</Steps>
+
+## Troubleshooting
+
+### Port already in use
+
+If port 8080 is already in use, Vite will automatically try the next available port. You can also specify a different port:
+
+```bash
+npm run dev -- --port 3000
+```
+
+### Tauri build fails
+
+Ensure you have all platform-specific dependencies:
+
+- **macOS**: Xcode Command Line Tools
+- **Linux**: `webkit2gtk-4.1`, `libappindicator3`, `librsvg2`
+- **Windows**: Microsoft Visual Studio C++ Build Tools
+
+See the [Tauri prerequisites](https://tauri.app/v1/guides/getting-started/prerequisites) for details.
+
+### Module not found errors
+
+Clear node_modules and reinstall:
+
+```bash
+rm -rf node_modules package-lock.json
+npm install
+```
+
+## Next steps
+
+- Learn about the [build process](/guides/building)
+- Explore the [testing guide](/guides/testing)
+- Read about [deployment](/guides/deployment)

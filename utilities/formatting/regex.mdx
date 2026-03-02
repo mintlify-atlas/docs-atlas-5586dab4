@@ -1,0 +1,316 @@
+---
+title: RegExp tester
+description: Test regular expressions with pattern matching, highlighting, and replacement features
+---
+
+The RegExp tester helps you build and test regular expressions. It provides real-time pattern matching, match highlighting, capture group extraction, and text replacement.
+
+## Features
+
+### Pattern testing
+
+Test regex patterns against text:
+
+- Real-time pattern matching
+- Visual match highlighting
+- Match count and position information
+- Support for all JavaScript regex features
+
+<Note>
+The tester uses native JavaScript RegExp, supporting all modern regex features.
+</Note>
+
+### Match highlighting
+
+See matches highlighted in context:
+
+- Yellow highlighting for matches
+- Preserve original text formatting
+- Multiple match visualization
+- In-context preview
+
+### Capture groups
+
+Extract and view captured groups:
+
+- See all capture groups for each match
+- Group numbering ($1, $2, etc.)
+- Empty group detection
+- Position information for each match
+
+### Text replacement
+
+Replace matched text with patterns:
+
+- Use capture groups in replacements ($1, $2)
+- Reference full match with $&
+- Preview replacement results
+- Test replacement patterns
+
+### Flag support
+
+Support for all JavaScript regex flags:
+
+- **g** - Global (find all matches)
+- **i** - Case-insensitive
+- **m** - Multiline (^ and $ match line boundaries)
+- **s** - Dot matches all (including newlines)
+- **u** - Unicode
+- **y** - Sticky (match from lastIndex)
+
+<Info>
+Enable the global flag (g) to find all matches instead of just the first one.
+</Info>
+
+## Use cases
+
+### Email validation
+
+Validate email addresses:
+
+```regex
+Pattern: [a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}
+Test: Contact us at support@example.com or sales@company.org
+Matches: support@example.com, sales@company.org
+```
+
+### Phone number extraction
+
+Extract phone numbers in various formats:
+
+```regex
+Pattern: \(?\d{3}\)?[-.]?\d{3}[-.]?\d{4}
+Test: Call (555) 123-4567 or 555.987.6543 for assistance
+Matches: (555) 123-4567, 555.987.6543
+```
+
+### URL matching
+
+Find URLs in text:
+
+```regex
+Pattern: https?://[^\s]+
+Test: Visit https://example.com or http://test.org for more info
+Matches: https://example.com, http://test.org
+```
+
+### Date extraction
+
+Extract dates with capture groups:
+
+```regex
+Pattern: (\d{2})/(\d{2})/(\d{4})
+Test: Events on 12/25/2024 and 01/01/2025
+Matches: 12/25/2024 (groups: 12, 25, 2024)
+         01/01/2025 (groups: 01, 01, 2025)
+```
+
+### Hex color codes
+
+Find hexadecimal color values:
+
+```regex
+Pattern: #([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})
+Test: Colors: #FF5733, #333, #00AAFF, and #F0F
+Matches: #FF5733, #333, #00AAFF, #F0F
+```
+
+## Pattern input
+
+The pattern input includes:
+
+- **Delimiters** - Visual `/` delimiters for clarity
+- **Pattern field** - Enter regex without delimiters
+- **Flag checkboxes** - Enable/disable flags visually
+- **Flag descriptions** - Tooltip explaining each flag
+
+## Match display
+
+The matches tab shows:
+
+### Highlighted text
+
+Your test string with matches highlighted in yellow.
+
+### Match details
+
+For each match:
+
+- Match number badge
+- Position in original text
+- Full matched text
+- Captured groups (if any)
+- Copy button for each match
+
+### Match information
+
+Green badge showing total match count.
+
+## Replace functionality
+
+The replace tab provides:
+
+### Replacement pattern
+
+Enter replacement text using:
+
+- **$1, $2, etc.** - Captured groups
+- **$&** - Full match
+- **Plain text** - Literal replacement
+
+### Replacement result
+
+See the transformed text with all replacements applied.
+
+### Example replacement
+
+```regex
+Pattern: (\d{2})/(\d{2})/(\d{4})
+Replacement: $3-$1-$2
+Input: Events on 12/25/2024 and 01/01/2025
+Output: Events on 2024-12-25 and 2025-01-01
+```
+
+<Tip>
+Use the replace tab to test text transformations before implementing in code.
+</Tip>
+
+## Examples
+
+Click "Examples" to load preset patterns:
+
+### Email validation
+
+**Pattern:** `[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}`
+
+**Test string:** Contact us at support@example.com or sales@company.org
+
+### Phone numbers
+
+**Pattern:** `\(?\d{3}\)?[-.]?\d{3}[-.]?\d{4}`
+
+**Test string:** Call (555) 123-4567 or 555.987.6543 for assistance
+
+### URLs
+
+**Pattern:** `https?://[^\s]+`
+
+**Test string:** Visit https://example.com or http://test.org for more info
+
+### Dates (MM/DD/YYYY)
+
+**Pattern:** `(\d{2})/(\d{2})/(\d{4})`
+
+**Test string:** Events on 12/25/2024 and 01/01/2025
+
+### Hex colors
+
+**Pattern:** `#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})`
+
+**Test string:** Colors: #FF5733, #333, #00AAFF, and #F0F
+
+## Quick reference
+
+The tester includes a quick reference panel:
+
+### Character classes
+
+- `\d` - Digit (0-9)
+- `\w` - Word character (a-z, A-Z, 0-9, _)
+- `\s` - Whitespace
+- `.` - Any character (except newline without s flag)
+
+### Quantifiers
+
+- `*` - 0 or more
+- `+` - 1 or more
+- `?` - 0 or 1
+- `{n}` - Exactly n times
+- `{n,}` - n or more times
+- `{n,m}` - Between n and m times
+
+### Anchors
+
+- `^` - Start of string (or line with m flag)
+- `$` - End of string (or line with m flag)
+- `\b` - Word boundary
+
+### Groups and alternation
+
+- `(x)` - Capture group
+- `(?:x)` - Non-capturing group
+- `x|y` - x or y (alternation)
+- `[abc]` - Any of a, b, or c
+- `[^abc]` - Not a, b, or c
+
+## Keyboard shortcuts
+
+- **Cmd/Ctrl + Enter** - Test pattern
+- **Cmd/Ctrl + K** - Clear all inputs
+- **Cmd/Ctrl + C** - Copy matches or replacement result
+
+## Tips
+
+<Tip>
+Enable the global (g) flag to see all matches instead of just the first one.
+</Tip>
+
+<Tip>
+Use capture groups to extract specific parts of matches, like area codes from phone numbers.
+</Tip>
+
+<Tip>
+The case-insensitive (i) flag is useful for matching text regardless of capitalization.
+</Tip>
+
+<Tip>
+Test your regex with edge cases to ensure it handles all expected input variations.
+</Tip>
+
+## Common patterns
+
+### Username
+
+```regex
+^[a-zA-Z0-9_]{3,16}$
+```
+
+3-16 characters, letters, numbers, underscores only.
+
+### Password strength
+
+```regex
+^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$
+```
+
+At least 8 characters, one uppercase, one lowercase, one digit, one special character.
+
+### IP address
+
+```regex
+^(?:[0-9]{1,3}\.){3}[0-9]{1,3}$
+```
+
+Basic IPv4 address format.
+
+### Credit card
+
+```regex
+^(?:4[0-9]{12}(?:[0-9]{3})?|5[1-5][0-9]{14})$
+```
+
+Visa or Mastercard numbers.
+
+## Error messages
+
+### Invalid pattern
+
+Displays the JavaScript regex error message when the pattern is syntactically invalid.
+
+### No matches
+
+Shows a toast notification when the pattern doesn't match any text.
+
+### Success
+
+Displays the number of matches found when testing succeeds.

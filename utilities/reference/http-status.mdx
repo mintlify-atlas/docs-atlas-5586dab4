@@ -1,0 +1,223 @@
+---
+title: HTTP Status Code Reference
+description: Browse and search HTTP status codes with descriptions and categories
+---
+
+The HTTP Status Code Reference provides a comprehensive, searchable database of HTTP status codes. You can quickly look up status codes, understand their meanings, and filter by category to find the information you need.
+
+## Features
+
+### Complete status code database
+
+Access all standard HTTP status codes organized by category:
+
+- **1xx Informational**: Request received, continuing process
+- **2xx Success**: Request successfully received, understood, and accepted
+- **3xx Redirection**: Further action needed to complete the request
+- **4xx Client Error**: Request contains bad syntax or cannot be fulfilled
+- **5xx Server Error**: Server failed to fulfill a valid request
+
+<Info>
+  The database includes all standard HTTP status codes defined in RFC 7231 and related specifications, plus commonly used extension codes.
+</Info>
+
+### Search functionality
+
+Find status codes quickly using the search bar:
+
+- Search by status code number (e.g., "404", "500")
+- Search by status name (e.g., "Not Found", "Internal Server Error")
+- Search by description keywords (e.g., "authentication", "redirect")
+
+The search is case-insensitive and searches across all fields simultaneously.
+
+### Category filtering
+
+Filter status codes by category:
+
+- View all codes at once
+- Filter to Informational (1xx) codes only
+- Show only Success (2xx) responses
+- Focus on Redirection (3xx) codes
+- Display Client Error (4xx) codes
+- View Server Error (5xx) codes
+
+<Tip>
+  Combine category filtering with search to narrow down results. For example, filter to "Client Error" and search for "auth" to find authentication-related 4xx codes.
+</Tip>
+
+## Status code categories
+
+### 1xx Informational responses
+
+These codes indicate that the request was received and understood, and the client should continue:
+
+- **100 Continue**: Server received request headers, client should send request body
+- **101 Switching Protocols**: Server switching protocols as requested
+- **102 Processing**: Server received request and is processing (WebDAV)
+
+Informational responses are rare in typical web applications but important for protocols like WebDAV and HTTP/2.
+
+### 2xx Success responses
+
+These codes indicate the request was successfully received, understood, and accepted:
+
+- **200 OK**: Standard successful response
+- **201 Created**: Request succeeded and new resource was created
+- **202 Accepted**: Request accepted but processing not complete
+- **204 No Content**: Success but no content to return
+- **206 Partial Content**: Partial resource delivery (range requests)
+
+<Note>
+  200 OK is by far the most common success code. Use 201 Created for POST requests that create resources, and 204 No Content for successful DELETE requests.
+</Note>
+
+### 3xx Redirection responses
+
+These codes indicate the client must take additional action:
+
+- **301 Moved Permanently**: Resource permanently moved to new URI
+- **302 Found**: Resource temporarily at different URI
+- **304 Not Modified**: Cached version is still valid
+- **307 Temporary Redirect**: Temporary redirect, don't change method
+- **308 Permanent Redirect**: Permanent redirect, don't change method
+
+<Info>
+  Use 301 for permanent URL changes (updates search engine indexes). Use 302 or 307 for temporary redirects (preserves original URL in indexes).
+</Info>
+
+### 4xx Client error responses
+
+These codes indicate the client made an error:
+
+**Common codes**:
+- **400 Bad Request**: Malformed request syntax
+- **401 Unauthorized**: Authentication required
+- **403 Forbidden**: Server refuses to authorize the request
+- **404 Not Found**: Resource doesn't exist
+- **405 Method Not Allowed**: HTTP method not supported for this resource
+- **409 Conflict**: Request conflicts with server state
+- **422 Unprocessable Entity**: Validation errors
+- **429 Too Many Requests**: Rate limit exceeded
+
+<Warning>
+  Don't confuse 401 Unauthorized with 403 Forbidden. Use 401 when authentication is missing or invalid. Use 403 when the user is authenticated but not authorized to access the resource.
+</Warning>
+
+### 5xx Server error responses
+
+These codes indicate the server failed to fulfill a valid request:
+
+- **500 Internal Server Error**: Generic server error
+- **501 Not Implemented**: Server doesn't support the functionality
+- **502 Bad Gateway**: Invalid response from upstream server
+- **503 Service Unavailable**: Server temporarily unavailable
+- **504 Gateway Timeout**: Upstream server didn't respond in time
+
+<Note>
+  5xx errors indicate server-side problems. Clients should not retry 5xx errors immediately without backoff logic, as this can worsen server overload.
+</Note>
+
+## Use cases
+
+### API development
+
+Choose appropriate status codes for API responses:
+
+```javascript
+// Success cases
+app.post('/users', (req, res) => {
+  const user = createUser(req.body);
+  res.status(201).json(user); // Created
+});
+
+// Error cases
+app.get('/users/:id', (req, res) => {
+  const user = findUser(req.params.id);
+  if (!user) {
+    res.status(404).json({ error: 'User not found' }); // Not Found
+  }
+});
+```
+
+### Debugging web applications
+
+Understand what status codes mean when troubleshooting:
+
+- **401 errors**: Check authentication headers or tokens
+- **403 errors**: Verify user permissions
+- **404 errors**: Confirm URL and routing configuration
+- **500 errors**: Check server logs for exceptions
+- **502/504 errors**: Investigate upstream services or load balancers
+
+### HTTP client configuration
+
+Configure appropriate retry logic based on status codes:
+
+```javascript
+const shouldRetry = (statusCode) => {
+  // Retry on server errors and rate limiting
+  return statusCode >= 500 || statusCode === 429;
+};
+
+const isClientError = (statusCode) => {
+  // Don't retry client errors
+  return statusCode >= 400 && statusCode < 500;
+};
+```
+
+<Tip>
+  Implement exponential backoff for 429 (Too Many Requests) and 503 (Service Unavailable) responses. Check for Retry-After headers to respect server timing.
+</Tip>
+
+### REST API design
+
+Follow REST conventions for status code usage:
+
+| Operation | Success Code | Error Code |
+|-----------|-------------|------------|
+| GET | 200 OK | 404 Not Found |
+| POST | 201 Created | 400 Bad Request, 422 Unprocessable Entity |
+| PUT | 200 OK | 400 Bad Request, 404 Not Found |
+| PATCH | 200 OK | 400 Bad Request, 404 Not Found |
+| DELETE | 204 No Content | 404 Not Found |
+
+## Special status codes
+
+### 418 I'm a teapot
+
+This is a humorous status code from RFC 2324 (Hyper Text Coffee Pot Control Protocol):
+
+> "Any attempt to brew coffee with a teapot should result in the error code 418 I'm a teapot."
+
+While originally an April Fools' joke, 418 is sometimes used by servers to indicate they refuse to process a request.
+
+### 451 Unavailable For Legal Reasons
+
+Introduced in RFC 7725, this status code indicates content is unavailable due to legal reasons, such as government censorship or copyright claims. Named after Ray Bradbury's novel "Fahrenheit 451" about book burning.
+
+<Info>
+  When using 451, include a Link header pointing to an explanation of the legal restriction, as specified in RFC 7725.
+</Info>
+
+## Best practices
+
+### Status code selection
+
+1. **Be specific**: Use the most specific status code available
+2. **Be consistent**: Use the same codes for similar situations
+3. **Follow standards**: Stick to standardized codes when possible
+4. **Document custom codes**: If using non-standard codes, document them clearly
+
+### Error responses
+
+When returning error status codes:
+
+- Include a descriptive error message in the response body
+- Use consistent error response format across your API
+- Provide error codes or types for programmatic handling
+- Include helpful information for debugging (in development)
+
+<Warning>
+  Don't expose sensitive information in error messages. Avoid revealing internal paths, database details, or stack traces in production error responses.
+</Warning>

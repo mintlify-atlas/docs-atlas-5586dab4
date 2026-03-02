@@ -1,0 +1,204 @@
+---
+title: SSL Certificate Decoder
+description: Decode and inspect X.509 SSL/TLS certificates in PEM format to view certificate details and validate expiration
+---
+
+The SSL Certificate Decoder utility parses and displays detailed information from X.509 SSL/TLS certificates. You can inspect certificate metadata, verify validity periods, examine public key information, and view cryptographic fingerprints.
+
+## Features
+
+### Certificate information extraction
+
+The decoder extracts and displays comprehensive certificate data:
+
+- **Version**: X.509 certificate version (v1, v2, or v3)
+- **Serial Number**: Unique certificate identifier in hexadecimal
+- **Signature Algorithm**: Cryptographic algorithm used for signing (SHA256-RSA, ECDSA, etc.)
+- **Subject**: Entity the certificate was issued to (CN, O, OU, C, ST, L)
+- **Issuer**: Certificate Authority that issued the certificate
+- **Validity Period**: Not Before and Not After dates with expiration status
+- **Public Key**: Algorithm and key size information
+
+<Info>
+  The decoder supports PEM-encoded certificates, which are the standard format starting with `-----BEGIN CERTIFICATE-----` and ending with `-----END CERTIFICATE-----`.
+</Info>
+
+### Certificate extensions
+
+View important X.509v3 extensions:
+
+**Subject Alternative Names (SAN)**:
+- DNS names covered by the certificate
+- IP addresses
+- Email addresses
+
+**Key Usage**:
+- digitalSignature
+- keyEncipherment
+- dataEncipherment
+- keyCertSign
+- crlSign
+
+**Extended Key Usage**:
+- serverAuth (TLS/SSL server authentication)
+- clientAuth (TLS/SSL client authentication)
+- codeSigning
+- emailProtection
+- timeStamping
+
+<Tip>
+  Subject Alternative Names (SANs) are crucial for modern certificates. A single certificate can cover multiple domains through SANs.
+</Tip>
+
+### Certificate fingerprints
+
+Generate cryptographic fingerprints using multiple hash algorithms:
+
+- **SHA-1**: Legacy fingerprint (still widely displayed)
+- **SHA-256**: Current standard fingerprint
+- **SHA-384**: Enhanced security fingerprint
+- **SHA-512**: Maximum security fingerprint
+
+Fingerprints are displayed in standard colon-separated hexadecimal format (e.g., `AB:CD:EF:12:34:...`).
+
+### Validity checking
+
+Automatic validation of certificate validity:
+
+- **Valid**: Certificate is within its validity period
+- **Expired**: Current date is after the Not After date
+- **Not Yet Valid**: Current date is before the Not Before date
+- **Days Remaining**: Countdown to expiration
+
+<Warning>
+  This tool checks certificate dates but does not verify the certificate chain, revocation status, or cryptographic signatures. Full validation requires a complete certificate chain and CRL/OCSP checking.
+</Warning>
+
+## Use cases
+
+### Certificate inspection
+
+Examine certificates before deployment:
+
+1. Paste the certificate in PEM format
+2. Verify the subject matches your domain
+3. Check the validity period covers your needs
+4. Confirm the issuer is your expected CA
+5. Review SANs to ensure all domains are covered
+
+### Expiration monitoring
+
+Track when certificates will expire:
+
+- View the exact expiration date and time
+- See days remaining until expiration
+- Plan certificate renewal timing
+- Avoid service disruptions from expired certificates
+
+<Note>
+  Certificates typically need renewal 30-90 days before expiration. Set up monitoring to track expiration dates proactively.
+</Note>
+
+### Troubleshooting SSL/TLS issues
+
+Diagnose certificate-related problems:
+
+**Common issues you can identify**:
+- Wrong certificate installed (check subject CN)
+- Expired certificate (check validity dates)
+- Missing domain in SAN (check alternative names)
+- Weak signature algorithm (check signature algorithm)
+- Wrong CA issuer (check issuer information)
+
+### Certificate comparison
+
+Compare certificates across environments:
+
+- Development vs. production certificates
+- Old vs. new certificates during renewal
+- Different servers to ensure consistency
+- Certificate fingerprints for verification
+
+<Info>
+  Use the fingerprints to verify certificate identity. SHA-256 fingerprints are the current standard for certificate pinning and verification.
+</Info>
+
+### Security auditing
+
+Review certificate security properties:
+
+- Signature algorithm strength (prefer SHA-256 or higher)
+- Public key algorithm and size (prefer RSA 2048+ or ECDSA)
+- Extended Key Usage matches intended use
+- Key Usage permissions are appropriate
+- Certificate lifespan is reasonable (prefer shorter validity periods)
+
+## Certificate formats
+
+### PEM format
+
+The decoder accepts PEM-encoded certificates:
+
+```
+-----BEGIN CERTIFICATE-----
+MIIDdTCCAl2gAwIBAgILBAAAAAABFUtaw5QwDQYJKoZIhvcNAQEFBQAwVzELMAkG
+A1UEBhMCQkUxGTAXBgNVBAoTEEdsb2JhbFNpZ24gbnYtc2ExEDAOBgNVBAsTB1Jv
+...
+-----END CERTIFICATE-----
+```
+
+<Tip>
+  You can obtain certificates in PEM format from web browsers, servers, or using OpenSSL commands like `openssl s_client -connect example.com:443 -showcerts`.
+</Tip>
+
+### Getting certificates
+
+**From a browser**:
+1. Click the padlock icon in the address bar
+2. View certificate details
+3. Export or copy the certificate
+
+**From a server using OpenSSL**:
+```bash
+openssl s_client -connect example.com:443 -showcerts < /dev/null 2>/dev/null | openssl x509 -outform PEM
+```
+
+**From a file**:
+```bash
+cat certificate.crt
+```
+
+## Understanding certificate fields
+
+### Subject and Issuer DN
+
+Distinguished Names (DN) contain:
+- **CN** (Common Name): Primary domain or entity name
+- **O** (Organization): Company or organization name
+- **OU** (Organizational Unit): Department or division
+- **C** (Country): Two-letter country code
+- **ST** (State): State or province
+- **L** (Locality): City or locality
+
+### Validity period
+
+Certificates have strict time bounds:
+- **Not Before**: Certificate becomes valid at this time
+- **Not After**: Certificate expires at this time
+- Both times are in UTC/ISO format
+
+<Warning>
+  Certificate validity is checked against the system clock. Ensure your system time is accurate for correct validation results.
+</Warning>
+
+### Public key algorithms
+
+Common algorithms you'll see:
+- **RSA**: Traditional algorithm, 2048-bit or 4096-bit keys
+- **EC (Elliptic Curve)**: Modern algorithm, smaller keys with equivalent security
+- **DSA**: Older algorithm, less common
+- **Ed25519**: Modern elliptic curve algorithm
+
+<Note>
+  The decoder performs ASN.1 DER parsing of the certificate structure. This is a complex binary format defined by X.509 standards.
+</Note>

@@ -1,0 +1,98 @@
+---
+title: String Analyser
+description: Analyze text strings and convert between different naming conventions with real-time statistics
+---
+
+The String Analyser utility provides comprehensive text analysis and case conversion capabilities. You can analyze character counts, word counts, line counts, and file sizes while converting text between different naming conventions commonly used in programming.
+
+## Features
+
+### Text analysis
+
+The utility displays real-time statistics for your input text:
+
+- **Characters**: Total number of Unicode code points in the text
+- **Unique Characters**: Count of distinct characters (useful for detecting character set issues)
+- **Words**: Number of space-separated words
+- **Lines**: Count of line breaks in the text
+- **Size**: Byte size of the UTF-8 encoded string with automatic formatting (B, KB, MB)
+
+<Info>
+  All statistics update automatically as you type, providing instant feedback on your text.
+</Info>
+
+### Case conversion
+
+Convert text between common naming conventions used in programming:
+
+- **lowercase**: Converts all characters to lowercase
+- **UPPERCASE**: Converts all characters to uppercase  
+- **camelCase**: Converts text to camel case (first word lowercase, subsequent words capitalized)
+- **snake_case**: Converts text to snake case (words separated by underscores)
+- **kebab-case**: Converts text to kebab case (words separated by hyphens)
+
+<Tip>
+  Use keyboard shortcuts to speed up your workflow: Cmd/Ctrl+Enter to copy output, Cmd/Ctrl+K to clear all fields.
+</Tip>
+
+## Use cases
+
+### Variable naming
+
+Quickly convert between naming conventions when refactoring code or working across different programming languages:
+
+```javascript
+// Original: "user profile settings"
+const userProfileSettings = ...  // camelCase
+const user_profile_settings = ... // snake_case
+const UserProfileSettings = ...   // PascalCase (use uppercase then camelCase)
+```
+
+### Content analysis
+
+Analyze text content before processing:
+
+- Check character counts for validation rules
+- Verify word counts for content requirements
+- Monitor file size for upload limits
+- Detect unique character sets in multilingual content
+
+### Data formatting
+
+Prepare text data for different systems:
+
+- Convert database column names between conventions
+- Format API request/response field names
+- Standardize configuration file keys
+- Clean up user input text
+
+<Note>
+  The byte size calculation uses UTF-8 encoding, which is the standard for web applications and most modern systems.
+</Note>
+
+## Text statistics explained
+
+### Character count vs. byte size
+
+The character count shows Unicode code points, while byte size shows the UTF-8 encoded size. For ASCII text, these are equal, but for special characters or emojis, the byte size will be larger:
+
+- ASCII character 'A': 1 character, 1 byte
+- Unicode character 'é': 1 character, 2 bytes
+- Emoji '😀': 1 character, 4 bytes
+
+### Unique characters
+
+The unique character count is useful for:
+
+- Detecting if text contains unexpected characters
+- Validating character set requirements
+- Analyzing text complexity
+- Finding hidden whitespace or control characters
+
+### Word and line counts
+
+Word counting uses simple space separation, which works well for most Western languages. Line counting detects newline characters, making it useful for analyzing multi-line text blocks, code snippets, or formatted content.
+
+<Warning>
+  Case conversion operations replace the original text in the output field. Use the copy button to save your results before performing another conversion.
+</Warning>

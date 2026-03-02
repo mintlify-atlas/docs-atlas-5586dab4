@@ -1,0 +1,131 @@
+---
+title: URL encoder/decoder
+description: Encode and decode URLs with support for encodeURIComponent and encodeURI modes, plus a reference table of common encodings
+---
+
+The URL encoder/decoder converts special characters in URLs to percent-encoded format and decodes them back. It supports both component-level and full URL encoding modes.
+
+## Features
+
+### Dual encoding modes
+
+Choose between two JavaScript encoding functions:
+
+**encodeURIComponent**
+- Encodes all special characters including `/`, `?`, `&`, `=`
+- Best for encoding query parameters, form data, or individual URL components
+- Most commonly used mode
+
+**encodeURI**
+- Preserves URL structure characters like `/`, `?`, `&`, `=`
+- Only encodes characters that would break URL syntax
+- Best for encoding complete URLs while maintaining their structure
+
+### Interactive examples
+
+The Examples popover provides real-world test cases:
+- Full URLs with query parameters
+- Text with emoji characters
+- Email addresses
+- JSON objects in URLs
+
+Each example shows both encoded and decoded versions with descriptions.
+
+### Swap functionality
+
+Quickly reverse your input and output using the Swap button, making it easy to chain encode/decode operations.
+
+### Common encodings reference
+
+A built-in reference table displays the percent-encoded values for frequently used characters:
+
+| Character | Encoded |
+|-----------|----------|
+| Space | %20 |
+| ! | %21 |
+| # | %23 |
+| $ | %24 |
+| & | %26 |
+| : | %3A |
+| = | %3D |
+| ? | %3F |
+| @ | %40 |
+
+And many more.
+
+### Keyboard shortcuts
+
+Accelerate your workflow:
+- Execute encoding/decoding
+- Copy output to clipboard
+- Clear all fields
+
+## Use cases
+
+### Encoding query parameters
+
+Encode form data or search queries for URLs:
+
+```
+Input: user@example.com
+Output: user%40example.com
+```
+
+### Sharing URLs with special characters
+
+Ensure URLs with spaces, ampersands, or other special characters work correctly:
+
+```
+Input: https://example.com/path?query=value&foo=bar
+Output: https%3A%2F%2Fexample.com%2Fpath%3Fquery%3Dvalue%26foo%3Dbar
+```
+
+### Debugging API requests
+
+Decode URL-encoded responses from APIs to see the original values.
+
+### Handling internationalization
+
+Encode URLs containing Unicode characters:
+
+```
+Input: Hello World! 👋
+Output: Hello%20World%21%20%F0%9F%91%8B
+```
+
+<Info>
+When encoding full URLs, use encodeURI to preserve the URL structure. Use encodeURIComponent for individual components like query parameter values.
+</Info>
+
+## How it works
+
+The utility uses JavaScript's standard encoding functions:
+
+**encodeURIComponent mode:**
+- Encodes characters using UTF-8 percent encoding
+- Reserved characters like `=`, `&`, `+` become `%3D`, `%26`, `%2B`
+- Suitable for encoding data that will be part of a URL
+
+**encodeURI mode:**
+- Preserves valid URL characters (: / ? # [ ] @ ! $ & ' ( ) * + , ; =)
+- Only encodes characters that are invalid in URLs
+- Suitable for encoding complete URL strings
+
+**Decoding:**
+- Uses `decodeURIComponent` to convert percent-encoded strings back to UTF-8
+- Handles all encoded characters automatically
+
+<Tip>
+The character reference table at the bottom helps you quickly identify what specific characters encode to.
+</Tip>
+
+## Error handling
+
+The utility displays error messages when:
+- Input contains invalid escape sequences during decoding
+- Malformed percent-encoded strings are provided
+
+## Related tools
+
+- **Base64 encoder** - For binary-safe text encoding
+- **Color converter** - For encoding color values in URLs

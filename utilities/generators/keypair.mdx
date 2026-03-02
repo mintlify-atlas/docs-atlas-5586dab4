@@ -1,0 +1,129 @@
+---
+title: Key pair generator
+description: Generate RSA and ECDSA cryptographic key pairs in PEM or SSH format
+---
+
+The key pair generator creates public/private key pairs for cryptographic operations like SSH authentication, SSL/TLS certificates, and digital signatures. Keys are generated using your browser's Web Crypto API and never leave your device.
+
+## Features
+
+### Format options
+
+**PEM format**
+- Standard for SSL/TLS certificates and web servers
+- Includes both private and public keys in PEM-encoded format
+- Suitable for use with OpenSSL and most certificate authorities
+
+**SSH format**
+- Single-line public key format for SSH authentication
+- Private key remains in PEM format
+- Ready to add to `~/.ssh/authorized_keys`
+
+### Algorithm options
+
+**RSA**
+- Most widely supported algorithm
+- Key sizes: 1024, 2048, 3072, or 4096 bits
+- Recommended: 2048 bits minimum, 4096 bits for high security
+- Uses RSASSA-PKCS1-v1.5 with SHA-256
+
+<Info>
+1024-bit RSA keys are considered insecure by modern standards. Use 2048 bits or higher.
+</Info>
+
+**ECDSA** (Elliptic Curve Digital Signature Algorithm)
+- More efficient than RSA with equivalent security
+- Supported curves:
+  - P-256 (secp256r1) - Widely supported, good balance
+  - P-384 (secp384r1) - Higher security
+  - P-521 (secp521r1) - Maximum security
+- Smaller key sizes than RSA for equivalent security
+
+**Ed25519**
+- Modern elliptic curve algorithm
+- Not supported in all browsers' Web Crypto API
+- If available, offers excellent security and performance
+
+<Warning>
+Ed25519 support varies by browser. If you see an error, use ECDSA with P-256 or P-384 instead.
+</Warning>
+
+### Optional comments
+
+Add a comment or email address to your keys for identification. The comment appears:
+- In PEM format: As a header comment
+- In SSH format: At the end of the public key line
+
+## Generated keys
+
+After generation, you'll see:
+
+- **Private key** - Keep this secure and never share it
+- **Public key** - Safe to distribute for verification
+- **Algorithm details** - Shows the algorithm, key size (RSA), or curve (ECDSA)
+- **Comment** - If you added one
+
+### Download keys
+
+Click the download button next to each key to save it:
+- Private keys: `private_key_rsa.pem` (or `.key` for ECDSA)
+- Public keys: `public_key_rsa.pub` (SSH) or `.pem`
+
+<Tip>
+If you added a comment, it's included in the filename to help you identify your keys.
+</Tip>
+
+### Copy keys
+
+Click the copy button to copy the entire key (including headers and footers) to your clipboard.
+
+## Keyboard shortcuts
+
+- **Cmd/Ctrl + Enter** - Generate key pair
+- **Cmd/Ctrl + Shift + Backspace** - Clear all
+
+## Use cases
+
+### SSH authentication
+
+1. Select "SSH" format
+2. Choose RSA (4096 bits) or ECDSA (P-256)
+3. Add your email as a comment
+4. Generate the key pair
+5. Copy the public key to your server's `~/.ssh/authorized_keys`
+6. Save the private key securely (usually in `~/.ssh/id_rsa` or `~/.ssh/id_ecdsa`)
+
+### SSL/TLS certificates
+
+1. Select "PEM" format
+2. Choose RSA (2048 or 4096 bits)
+3. Generate the key pair
+4. Use the private key to create a Certificate Signing Request (CSR)
+5. Submit the CSR to a certificate authority
+
+### Code signing
+
+1. Select "PEM" format
+2. Choose RSA (4096 bits) or ECDSA (P-384 or P-521)
+3. Generate the key pair
+4. Use the private key to sign your code or releases
+5. Distribute the public key for verification
+
+### API authentication
+
+1. Generate an RSA or ECDSA key pair
+2. Register the public key with the API provider
+3. Use the private key to sign API requests
+
+<Note>
+Keys are generated using your browser's Web Crypto API, which uses cryptographically secure random number generation. Your keys never leave your device.
+</Note>
+
+## Security best practices
+
+- **Protect your private key** - Store it in a secure location with restricted permissions (chmod 600 on Unix systems)
+- **Use strong key sizes** - At least 2048 bits for RSA, P-256 or higher for ECDSA
+- **Add passphrases** - After downloading, encrypt your private key with a passphrase using `ssh-keygen` or OpenSSL
+- **Rotate keys regularly** - Generate new keys periodically, especially for critical systems
+- **Never share private keys** - Only distribute public keys
+- **Backup securely** - Keep encrypted backups of your private keys in a secure location

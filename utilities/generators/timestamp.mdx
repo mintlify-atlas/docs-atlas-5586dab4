@@ -1,0 +1,206 @@
+---
+title: Timestamp and date converter
+description: Convert between Unix timestamps and human-readable dates, calculate date differences, and convert time units
+---
+
+The timestamp converter helps you work with timestamps and dates across different formats. Convert Unix epoch timestamps to readable dates, calculate differences between dates, and convert between time units.
+
+## Features
+
+### Epoch to date conversion
+
+Convert Unix timestamps (epoch time) to human-readable dates:
+
+1. Enter a timestamp in seconds (10 digits) or milliseconds (13 digits)
+2. Click "Convert" or let it auto-convert
+3. View the timestamp in multiple formats:
+   - Local time (with day of week)
+   - UTC time
+   - ISO 8601 format
+   - Unix seconds
+   - Unix milliseconds
+   - Relative time (e.g., "5 hours ago")
+
+<Info>
+The converter automatically detects whether your timestamp is in seconds or milliseconds based on the number of digits.
+</Info>
+
+### Date to epoch conversion
+
+Convert human-readable dates to Unix timestamps:
+
+1. Enter a date in ISO 8601 format: `YYYY-MM-DDTHH:mm:ss`
+2. Click "Convert"
+3. Get the timestamp in:
+   - Unix seconds
+   - Unix milliseconds
+   - ISO 8601
+   - Local time
+   - UTC time
+
+<Tip>
+Click "Use Current Time" to automatically populate the input with the current timestamp or date.
+</Tip>
+
+### Date difference calculator
+
+Calculate the time between two dates:
+
+1. Select a start date and time
+2. Select an end date and time
+3. Optionally enable "Include both start & end dates" to count both boundary dates
+4. Click "Calculate Difference"
+5. View the difference in:
+   - Breakdown (years, months, days, hours, minutes)
+   - Total days
+   - Total weeks
+   - Total hours
+   - Total minutes
+   - Total seconds
+
+<Note>
+The "Include both dates" option is useful when calculating ranges where both endpoints count. For example, January 1 to January 3 with this option enabled equals 3 days (not 2).
+</Note>
+
+### Unit conversion
+
+Convert between different time units:
+
+- Milliseconds
+- Seconds
+- Minutes
+- Hours
+- Days
+- Weeks
+- Months (approximate: 30.44 days)
+- Years (approximate: 365.25 days)
+
+Enter a value, select the source and target units, then convert.
+
+## Examples
+
+Click the "Examples" button in the header to access:
+
+**Timestamp examples**
+- January 1, 2022 (seconds)
+- January 1, 2022 (milliseconds)
+- November 14, 2023
+- Millennium (Jan 1, 2000)
+
+**Date examples**
+- New Year 2024
+- Christmas 2023
+- Independence Day
+- Y2K Millennium
+
+Click "Use" next to any example to populate the input and switch to the appropriate tab.
+
+## Keyboard shortcuts
+
+- **Cmd/Ctrl + Enter** - Convert current input
+- **Cmd/Ctrl + C** - Copy first result
+- **Cmd/Ctrl + Shift + Backspace** - Clear all
+
+## Date and time formats reference
+
+Expand the "Date & Time Formats Around the World" section to access:
+
+### Date order by region
+
+Learn how different countries format dates:
+- DD/MM/YYYY (UK, Europe, India, Australia)
+- MM/DD/YYYY (United States, Philippines)
+- YYYY-MM-DD (ISO 8601, Japan, Korea, China)
+- And more regional variations
+
+### Time formats
+
+- 12-hour clock (US, UK, Australia, India)
+- 24-hour clock (Europe, Japan, China, military)
+
+### Timezone essentials
+
+Reference table for common timezones:
+- UTC/GMT (global reference)
+- EST/EDT, PST/PDT (US)
+- CET/CEST (Europe)
+- IST (India)
+- JST (Japan)
+- AEST/AEDT (Australia)
+
+### Standard formats for developers
+
+**ISO 8601** (recommended)
+- `2025-12-25T15:30:00Z`
+- Unambiguous, sortable, universally understood
+- Use in APIs and databases
+
+**Unix Epoch**
+- Seconds: `1766685000` (10 digits)
+- Milliseconds: `1766685000000` (13 digits)
+- Timezone-free, compact, ideal for storage
+
+**RFC 2822**
+- `Thu, 25 Dec 2025 15:30:00 +0000`
+- Used in email and HTTP headers
+
+**RFC 3339**
+- `2025-12-25T15:30:00.000Z`
+- Profile of ISO 8601 for internet protocols
+
+### Format tokens cheat sheet
+
+Quick reference for date/time tokens:
+- `YYYY` - 4-digit year (2025)
+- `MM` - Month (01-12)
+- `DD` - Day (01-31)
+- `HH` - Hours 24-hour (00-23)
+- `hh` - Hours 12-hour (01-12)
+- `mm` - Minutes (00-59)
+- `ss` - Seconds (00-59)
+- `SSS` - Milliseconds (000-999)
+- `Z` - Timezone offset (+05:30)
+- `A/a` - AM/PM marker
+
+### Notable epoch milestones
+
+- `0` - Jan 1, 1970 (Unix Epoch start)
+- `946684800` - Jan 1, 2000 (Y2K Millennium)
+- `1000000000` - Sep 9, 2001 (Billennium)
+- `2147483647` - Jan 19, 2038 (Y2K38 - 32-bit overflow)
+
+<Warning>
+The Y2K38 problem affects systems using 32-bit signed integers for timestamps. After January 19, 2038, these systems will overflow and return incorrect dates.
+</Warning>
+
+## Developer tips
+
+- Always store dates in UTC and convert to local time only for display
+- Use ISO 8601 format in APIs - it's the only unambiguous format
+- JavaScript's `Date.now()` returns milliseconds; most Unix tools use seconds
+- Use IANA timezone identifiers (`America/New_York`) instead of abbreviations (`EST`)
+- Never assume a day is exactly 24 hours due to Daylight Saving Time
+- Some countries use half-hour (+05:30) or 45-minute (+05:45) timezone offsets
+- When comparing dates, always normalize to the same timezone first
+
+## Use cases
+
+### Debugging API timestamps
+
+Paste Unix timestamps from API responses to see them in human-readable format.
+
+### Log analysis
+
+Convert timestamps from log files to understand when events occurred in your local timezone.
+
+### Scheduling
+
+Calculate date differences to determine how much time remains until a deadline or how long a process took.
+
+### Data migration
+
+Convert dates between different formats when migrating data between systems.
+
+### Testing
+
+Generate timestamps for past or future dates to test time-dependent features.

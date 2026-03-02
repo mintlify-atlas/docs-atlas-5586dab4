@@ -1,0 +1,165 @@
+---
+title: JWT Token
+description: Decode and inspect JWT tokens or create new tokens with custom headers and payloads
+---
+
+The JWT Token utility provides comprehensive JWT (JSON Web Token) encoding and decoding capabilities. You can decode existing tokens to inspect their contents or create new tokens with custom headers, payloads, and signatures.
+
+## Features
+
+### Token decoder
+
+Decode and analyze JWT tokens to view their structure:
+
+- **Header inspection**: View algorithm, token type, and other header claims
+- **Payload analysis**: Examine all payload claims with descriptions
+- **Signature verification**: Check token signature structure
+- **Expiration checking**: Automatic validation of `exp`, `nbf`, and `iat` timestamps
+- **Claims documentation**: Built-in descriptions for registered and public claims
+
+<Info>
+  The decoder automatically validates token expiration and displays whether the token is currently valid based on the `exp` (expiration) and `nbf` (not before) claims.
+</Info>
+
+### Token encoder
+
+Create new JWT tokens with custom contents:
+
+- **Custom headers**: Define algorithm, token type, and additional header parameters
+- **Custom payloads**: Add any claims including registered, public, and private claims
+- **Secret signing**: Include a secret for signature generation
+- **Visual preview**: See color-coded token parts (header, payload, signature)
+
+### Claims reference
+
+The utility includes comprehensive documentation for:
+
+**Registered Claims** (RFC 7519):
+- `iss`: Issuer of the token
+- `sub`: Subject (user) of the token
+- `aud`: Intended audience
+- `exp`: Expiration time (Unix timestamp)
+- `nbf`: Not before time (Unix timestamp)
+- `iat`: Issued at time (Unix timestamp)
+- `jti`: Unique token identifier
+
+**Public Claims** (OpenID Connect):
+- `name`, `given_name`, `family_name`: User name information
+- `email`, `email_verified`: Email address and verification status
+- `phone_number`, `phone_number_verified`: Phone and verification
+- `roles`, `permissions`, `groups`: Authorization data
+- Many more standard claims
+
+<Tip>
+  Hover over any claim name in the decoded view to see its description and a link to the relevant specification.
+</Tip>
+
+## Use cases
+
+### Debugging authentication issues
+
+When troubleshooting JWT-based authentication:
+
+1. Paste the token from your application
+2. Check the expiration status
+3. Verify the issuer and audience claims
+4. Inspect user information in the payload
+5. Validate the signing algorithm
+
+<Warning>
+  Never share JWT tokens that contain real user data or secrets. The decoder processes tokens locally, but be cautious with sensitive information.
+</Warning>
+
+### Understanding token structure
+
+Learn how JWT tokens are structured:
+
+```
+eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
+```
+
+This token consists of three base64url-encoded parts separated by dots:
+1. **Header** (red): `{"alg":"HS256","typ":"JWT"}`
+2. **Payload** (purple): `{"sub":"1234567890","name":"John Doe","iat":1516239022}`
+3. **Signature** (cyan): HMAC SHA-256 signature
+
+### Testing API integrations
+
+Create test tokens for API development:
+
+1. Switch to the Encoder tab
+2. Customize the header with your algorithm
+3. Add payload claims matching your API requirements
+4. Generate the token with a test secret
+5. Copy and use in API requests
+
+<Note>
+  The encoder creates demo tokens for testing purposes. Production tokens should be generated server-side with proper cryptographic security.
+</Note>
+
+### Verifying token claims
+
+Check if a token contains the expected claims:
+
+- Verify user roles and permissions
+- Check token expiration time
+- Validate issuer and audience
+- Inspect custom application claims
+- Review timestamp claims in human-readable format
+
+## Token validation
+
+### Automatic validation
+
+The decoder automatically validates:
+
+- **Token format**: Checks for three dot-separated parts
+- **Base64url encoding**: Validates proper encoding
+- **JSON structure**: Ensures valid JSON in header and payload
+- **Expiration**: Compares `exp` claim with current time
+- **Not before**: Compares `nbf` claim with current time
+
+### Expiration status
+
+Tokens are marked as invalid if:
+- The `exp` (expiration) timestamp has passed
+- The `nbf` (not before) timestamp hasn't been reached yet
+- The token format is malformed
+
+<Info>
+  Timestamp claims (`exp`, `iat`, `nbf`, `auth_time`, `updated_at`) display both the Unix timestamp and a human-readable date when you hover over them.
+</Info>
+
+## Viewing modes
+
+### JSON view
+
+See the raw JSON structure of the header and payload with:
+- Syntax highlighting for keys and values
+- Formatted, readable output
+- Copy button to extract JSON
+- Interactive tooltips on claim names
+
+### Claims table view
+
+View claims in a structured table format:
+- **Claim column**: The claim name with color coding
+- **Value column**: The claim value with copy functionality
+- **Description column**: Built-in documentation for known claims
+- **Learn more links**: Direct links to RFC specifications
+
+<Tip>
+  Double-click any value in the JSON view to select it for easy copying. Or use the individual copy buttons in the claims table.
+</Tip>
+
+## Signature verification
+
+The utility displays signature information:
+
+- Signature algorithm from the header
+- Base64url-encoded signature value
+- Status indicator (note: actual cryptographic verification requires server-side implementation)
+
+<Warning>
+  This tool shows signature structure but doesn't perform cryptographic verification. True signature verification requires the proper signing key and should be done server-side.
+</Warning>

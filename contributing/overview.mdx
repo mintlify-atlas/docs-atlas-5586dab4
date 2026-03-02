@@ -1,0 +1,155 @@
+---
+title: Contributing overview
+description: Learn how to contribute to TryDevUtils and help make developer tools better for everyone
+---
+
+We welcome contributions to TryDevUtils! Whether you're fixing bugs, adding new utilities, or improving documentation, your help makes this project better for developers everywhere.
+
+## Ways to contribute
+
+You can contribute to TryDevUtils in several ways:
+
+- **Report bugs** - Found an issue? Let us know
+- **Request features** - Have an idea for a new utility? We'd love to hear it
+- **Add utilities** - Contribute new developer tools to the collection
+- **Fix bugs** - Help resolve existing issues
+- **Improve documentation** - Make our docs clearer and more helpful
+- **Enhance existing utilities** - Add features or improve performance
+
+## Getting started
+
+<Steps>
+  <Step title="Fork and clone the repository">
+    Fork the [TryDevUtils repository](https://github.com/gammabowl/try-devutils) and clone it to your local machine:
+
+    ```bash
+    git clone https://github.com/your-username/try-devutils.git
+    cd trydevutils
+    ```
+  </Step>
+
+  <Step title="Install dependencies">
+    Install the project dependencies using npm:
+
+    ```bash
+    npm install
+    ```
+  </Step>
+
+  <Step title="Start the development server">
+    Run the web development server:
+
+    ```bash
+    npm run dev
+    ```
+
+    The app will be available at `http://localhost:8080`
+  </Step>
+
+  <Step title="Make your changes">
+    Create a new branch for your work:
+
+    ```bash
+    git checkout -b feature/your-feature-name
+    ```
+
+    Make your changes following our [code style guidelines](/contributing/code-style).
+  </Step>
+
+  <Step title="Test your changes">
+    Ensure your changes work correctly:
+
+    ```bash
+    npm run check  # Type check and build
+    npm run lint   # Check code style
+    npm run test   # Run Playwright tests
+    ```
+  </Step>
+
+  <Step title="Submit a pull request">
+    Push your changes and open a pull request with a clear description of what you've added or fixed.
+  </Step>
+</Steps>
+
+## Reporting bugs
+
+Found a bug? Help us fix it by creating a detailed bug report:
+
+1. Check if the bug has already been reported in [GitHub Issues](https://github.com/gammabowl/try-devutils/issues)
+2. If not, create a new issue with a detailed description
+3. Include:
+   - Clear steps to reproduce the bug
+   - Expected vs actual behavior
+   - Browser, OS, and device information
+   - Sample input that causes the issue
+   - Any error messages from the browser console (F12 → Console)
+   - Screenshots if relevant
+
+## Requesting features
+
+Have an idea for a new developer utility? Share it with us:
+
+1. Check [existing feature requests](https://github.com/gammabowl/try-devutils/issues?q=is%3Aissue+label%3Aenhancement)
+2. Create a new issue describing your feature idea
+3. Include:
+   - What problem the utility solves
+   - How it would work
+   - Why it would be valuable to developers
+   - Any examples from other tools
+
+## Development workflow
+
+### Available commands
+
+```bash
+npm run dev              # Web dev server (port 8080)
+npm run build            # Production web build
+npm run test             # Run Playwright tests
+npm run lint             # Run ESLint
+npm run check            # Type check + build
+npm run tauri:dev        # Desktop app dev (requires Rust)
+npm run tauri:build      # Build desktop app
+npm run extension:prepare # Build Chrome extension
+```
+
+### Project structure
+
+```
+src/
+  components/
+    utils/              # Individual utility components
+    ui/                 # Shared UI components
+  lib/
+    utils.ts            # Utility registration
+    lazyUtils.ts        # Lazy-loaded components
+src-tauri/              # Desktop app (Tauri)
+extension/              # Chrome extension manifest
+tests/                  # Playwright tests
+```
+
+## Code review process
+
+All contributions go through code review:
+
+1. A maintainer will review your pull request
+2. They may request changes or ask questions
+3. Address any feedback by pushing additional commits
+4. Once approved, a maintainer will merge your PR
+
+## Community guidelines
+
+- Be respectful and constructive in discussions
+- Follow the code of conduct
+- Ask questions if you're unsure about anything
+- Help other contributors when you can
+
+## Next steps
+
+<CardGroup cols={2}>
+  <Card title="Adding utilities" icon="plus" href="/contributing/adding-utilities">
+    Learn how to create and register new developer utilities
+  </Card>
+  <Card title="Code style" icon="code" href="/contributing/code-style">
+    Follow our coding standards and best practices
+  </Card>
+</CardGroup>

@@ -1,122 +1,132 @@
 {
   "$schema": "https://mintlify.com/docs.json",
-  "theme": "mint",
-  "name": "Mint Starter Kit",
+  "name": "TryDevUtils",
+  "theme": "palm",
   "colors": {
-    "primary": "#16A34A",
-    "light": "#07C983",
-    "dark": "#15803D"
+    "primary": "#3B82F6",
+    "light": "#60A5FA",
+    "dark": "#2563EB"
   },
-  "favicon": "/favicon.svg",
+  "navbar": {
+    "primary": {
+      "type": "github",
+      "href": "https://github.com/gammabowl/try-devutils"
+    }
+  },
+  "footer": {
+    "socials": {
+      "github": "https://github.com/gammabowl/try-devutils"
+    }
+  },
   "navigation": {
     "tabs": [
       {
-        "tab": "Guides",
+        "tab": "Documentation",
         "groups": [
           {
-            "group": "Getting started",
+            "group": "Get Started",
             "pages": [
-              "index",
-              "quickstart",
-              "development"
+              "introduction",
+              "quickstart"
             ]
           },
           {
-            "group": "Customization",
+            "group": "Installation",
             "pages": [
-              "essentials/settings",
-              "essentials/navigation"
+              "installation/web",
+              "installation/desktop",
+              "installation/chrome-extension"
             ]
           },
           {
-            "group": "Writing content",
+            "group": "Core Features",
             "pages": [
-              "essentials/markdown",
-              "essentials/code",
-              "essentials/images",
-              "essentials/reusable-snippets"
+              "features/overview",
+              "features/keyboard-shortcuts",
+              "features/command-palette",
+              "features/favorites"
             ]
           },
           {
-            "group": "AI tools",
+            "group": "Guides",
             "pages": [
-              "ai-tools/cursor",
-              "ai-tools/claude-code",
-              "ai-tools/windsurf"
+              "guides/development",
+              "guides/building",
+              "guides/testing",
+              "guides/deployment"
             ]
           }
         ]
       },
       {
-        "tab": "API reference",
+        "tab": "Utilities",
         "groups": [
           {
-            "group": "API documentation",
+            "group": "Encoding & Decoding",
             "pages": [
-              "api-reference/introduction"
+              "utilities/encoding/base64",
+              "utilities/encoding/url-encoder",
+              "utilities/encoding/number-base",
+              "utilities/encoding/zlib",
+              "utilities/encoding/color"
             ]
           },
           {
-            "group": "Endpoint examples",
+            "group": "Formatting & Validation",
             "pages": [
-              "api-reference/endpoint/get",
-              "api-reference/endpoint/create",
-              "api-reference/endpoint/delete",
-              "api-reference/endpoint/webhook"
+              "utilities/formatting/json",
+              "utilities/formatting/yaml",
+              "utilities/formatting/sql",
+              "utilities/formatting/markdown",
+              "utilities/formatting/cron",
+              "utilities/formatting/regex"
+            ]
+          },
+          {
+            "group": "Generators",
+            "pages": [
+              "utilities/generators/uuid",
+              "utilities/generators/hash",
+              "utilities/generators/keypair",
+              "utilities/generators/timestamp"
+            ]
+          },
+          {
+            "group": "Text & Diff",
+            "pages": [
+              "utilities/text/string-analyser",
+              "utilities/text/diff"
+            ]
+          },
+          {
+            "group": "Security & Crypto",
+            "pages": [
+              "utilities/security/jwt",
+              "utilities/security/ssl"
+            ]
+          },
+          {
+            "group": "Reference",
+            "pages": [
+              "utilities/reference/http-status",
+              "utilities/reference/mime-type"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "Contributing",
+        "groups": [
+          {
+            "group": "Contributing",
+            "pages": [
+              "contributing/overview",
+              "contributing/adding-utilities",
+              "contributing/code-style"
             ]
           }
         ]
       }
-    ],
-    "global": {
-      "anchors": [
-        {
-          "anchor": "Documentation",
-          "href": "https://mintlify.com/docs",
-          "icon": "book-open-cover"
-        },
-        {
-          "anchor": "Blog",
-          "href": "https://mintlify.com/blog",
-          "icon": "newspaper"
-        }
-      ]
-    }
-  },
-  "logo": {
-    "light": "/logo/light.svg",
-    "dark": "/logo/dark.svg"
-  },
-  "navbar": {
-    "links": [
-      {
-        "label": "Support",
-        "href": "mailto:hi@mintlify.com"
-      }
-    ],
-    "primary": {
-      "type": "button",
-      "label": "Dashboard",
-      "href": "https://dashboard.mintlify.com"
-    }
-  },
-  "contextual": {
-    "options": [
-     "copy",
-     "view",
-     "chatgpt",
-     "claude",
-     "perplexity",
-     "mcp",
-     "cursor",
-     "vscode"
-   ]
-  },
-  "footer": {
-    "socials": {
-      "x": "https://x.com/mintlify",
-      "github": "https://github.com/mintlify",
-      "linkedin": "https://linkedin.com/company/mintlify"
-    }
+    ]
   }
 }

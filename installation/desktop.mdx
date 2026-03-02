@@ -1,0 +1,129 @@
+---
+title: Install desktop app
+description: Build and run TryDevUtils as a native desktop application using Tauri
+---
+
+TryDevUtils can be built as a native desktop application for Windows, macOS, and Linux using Tauri 2.
+
+## Prerequisites
+
+Before you begin, ensure you have:
+
+- Node.js (version 16 or higher)
+- npm package manager
+- Rust (latest stable version)
+- Platform-specific toolchain:
+  - **macOS**: Xcode Command Line Tools
+  - **Windows**: Microsoft Visual Studio C++ Build Tools
+  - **Linux**: Development packages (webkit2gtk, build-essential)
+
+<Note>
+  Visit the [Tauri prerequisites guide](https://v2.tauri.app/start/prerequisites/) for detailed platform-specific setup instructions.
+</Note>
+
+## Development mode
+
+<Steps>
+  <Step title="Clone the repository">
+    Clone the TryDevUtils repository:
+    ```bash
+    git clone https://github.com/yourusername/trydevutils.git
+    cd trydevutils
+    ```
+  </Step>
+
+  <Step title="Install dependencies">
+    Install npm and Rust dependencies:
+    ```bash
+    npm install
+    ```
+  </Step>
+
+  <Step title="Run the desktop app">
+    Start the Tauri development server:
+    ```bash
+    npm run tauri:dev
+    ```
+
+    This command:
+    - Syncs the version from `package.json` to `tauri.conf.json`
+    - Starts the frontend dev server on port 1420
+    - Launches the Tauri desktop window
+  </Step>
+</Steps>
+
+The desktop app will open with hot-reload enabled. Changes to your source code will automatically refresh the application.
+
+## Building for production
+
+<Steps>
+  <Step title="Build the desktop application">
+    Create platform-specific installers:
+    ```bash
+    npm run tauri:build
+    ```
+
+    This generates optimized binaries and installers for your platform.
+  </Step>
+
+  <Step title="Locate build outputs">
+    Find your built application in:
+    ```
+    src-tauri/target/release/bundle/
+    ```
+
+    Available formats by platform:
+    - **macOS**: `.app`, `.dmg`
+    - **Windows**: `.exe`, `.msi`
+    - **Linux**: `.deb`, `.appimage`
+  </Step>
+</Steps>
+
+## Application configuration
+
+The desktop app is configured in `src-tauri/tauri.conf.json`:
+
+- **Product name**: TryDevUtils
+- **Bundle identifier**: `com.trydevutils.desktop`
+- **Window size**: 1200×800 (minimum 800×600)
+- **macOS**: Requires macOS 10.15 or higher
+
+## Available scripts
+
+| Script | Description |
+|--------|-------------|
+| `npm run tauri:dev` | Run desktop app in development mode |
+| `npm run tauri:build` | Build production desktop application |
+| `npm run tauri` | Run Tauri CLI commands directly |
+
+## Troubleshooting
+
+### Rust not found
+
+Install Rust using rustup:
+```bash
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+```
+
+### Build fails on macOS
+
+Ensure Xcode Command Line Tools are installed:
+```bash
+xcode-select --install
+```
+
+### Build fails on Linux
+
+Install required dependencies:
+```bash
+# Debian/Ubuntu
+sudo apt-get update
+sudo apt-get install -y libwebkit2gtk-4.1-dev build-essential curl wget file libssl-dev libayatana-appindicator3-dev librsvg2-dev
+
+# Fedora
+sudo dnf install webkit2gtk4.1-devel openssl-devel curl wget file libappindicator-gtk3-devel librsvg2-devel
+```
+
+### Build fails on Windows
+
+Install Microsoft Visual Studio C++ Build Tools with the "Desktop development with C++" workload.

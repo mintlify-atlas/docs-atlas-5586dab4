@@ -1,0 +1,89 @@
+---
+title: Base64 encoder/decoder
+description: Encode and decode text to and from Base64 format with UTF-8 support and cross-referencing to compression tools
+---
+
+The Base64 encoder/decoder converts plain text to Base64-encoded strings and vice versa. It handles UTF-8 characters correctly, making it suitable for encoding international text, email addresses, URLs, and other data.
+
+## Features
+
+### Bidirectional conversion
+
+You can encode plain text to Base64 or decode Base64 strings back to their original form using the tabbed interface.
+
+### UTF-8 support
+
+The utility properly handles Unicode characters using `encodeURIComponent` and `decodeURIComponent`, ensuring international characters encode and decode correctly.
+
+### Built-in examples
+
+Access ready-to-use examples through the Examples button:
+- Simple greetings ("Hello World")
+- Common test phrases ("The quick brown fox")
+- Email addresses
+- Common passwords
+
+Both encoding and decoding examples are available to help you get started quickly.
+
+### Error handling
+
+The utility provides clear error messages when:
+- Encoding fails due to invalid input characters
+- Decoding fails because the input isn't valid Base64
+
+### Keyboard shortcuts
+
+Speed up your workflow with keyboard shortcuts:
+- Execute the current operation (encode or decode)
+- Copy the output to clipboard
+- Clear all fields
+
+## Use cases
+
+### API authentication
+
+Encode credentials for Basic Authentication headers:
+
+```
+Input: user@example.com:password123
+Output: dXNlckBleGFtcGxlLmNvbTpwYXNzd29yZDEyMw==
+```
+
+### Data URLs
+
+Encode small files or images as data URIs for embedding in HTML or CSS.
+
+### Email encoding
+
+Encode email attachments or MIME content that requires Base64 encoding.
+
+### Configuration files
+
+Store or transmit configuration data in a format that avoids special character issues.
+
+<Note>
+Base64 encoding increases the size of your data by approximately 33%. For large text that needs compression, consider using the Zlib compressor instead.
+</Note>
+
+## How it works
+
+The utility uses JavaScript's built-in `btoa()` and `atob()` functions wrapped with UTF-8 encoding/decoding:
+
+**Encoding process:**
+1. Converts input text to UTF-8 using `encodeURIComponent`
+2. Applies `btoa()` to create Base64 output
+3. Displays the encoded result
+
+**Decoding process:**
+1. Applies `atob()` to decode Base64 string
+2. Converts back from UTF-8 using `decodeURIComponent`
+3. Displays the original text
+
+<Tip>
+The utility automatically links to the Zlib compressor for scenarios requiring both compression and encoding.
+</Tip>
+
+## Related tools
+
+- **Zlib compressor** - Combines deflate compression with Base64 encoding for smaller output
+- **URL encoder** - Percent-encodes URLs and query parameters

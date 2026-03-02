@@ -1,0 +1,158 @@
+---
+title: Colour converter
+description: Convert colours between hex, RGB, RGBA, HSL, HSLA, and HSV formats with live preview, palette generation, and interactive colour picker
+---
+
+The colour converter transforms colour values between multiple formats and generates colour palettes based on lightness variations. It includes a visual colour picker and real-time preview.
+
+## Features
+
+### Multiple colour formats
+
+Convert between six colour formats:
+
+- **HEX** - Hexadecimal notation (#RRGGBB)
+- **RGB** - Red, Green, Blue values (0-255)
+- **RGBA** - RGB with alpha transparency
+- **HSL** - Hue, Saturation, Lightness
+- **HSLA** - HSL with alpha transparency
+- **HSV** - Hue, Saturation, Value
+
+### Visual colour picker
+
+Use the native colour picker to select colours visually and see instant conversions to all formats.
+
+### Multi-format input
+
+Enter colours in any supported format:
+- `#3b82f6` (hex)
+- `rgb(59, 130, 246)` (RGB)
+- `hsl(217, 91%, 60%)` (HSL)
+
+The converter automatically detects the format and converts accordingly.
+
+### Live colour preview
+
+See a large colour swatch that updates in real-time as you change values, making it easy to visualize your colour.
+
+### Palette generation
+
+Generate a 9-shade palette based on your selected colour:
+- Automatically calculates lighter and darker variants
+- Shows 5 shades lighter and 4 shades darker
+- Each shade displays its hex code
+- Click any shade to copy its hex value
+
+### All formats popover
+
+View all colour formats at once in a convenient popover:
+- Each format includes a colour swatch
+- Format labels (HEX, RGB, HSL, etc.)
+- Copy button for each format
+- Values displayed in monospace font for clarity
+
+### Keyboard shortcuts
+
+Work faster with shortcuts for:
+- Converting colours
+- Copying hex values
+- Clearing fields
+
+## Use cases
+
+### CSS development
+
+Convert design system colours to the format you need:
+
+```
+Input: #3b82f6
+Outputs:
+  RGB: rgb(59, 130, 246)
+  HSL: hsl(217, 91%, 60%)
+  HSV: hsv(217, 76%, 96%)
+```
+
+### Design system creation
+
+Generate consistent colour palettes with automatic lightness variations for your brand colours.
+
+### Colour accessibility
+
+Convert colours to HSL to analyze and adjust lightness values for better contrast ratios.
+
+### Cross-platform design
+
+Convert between colour formats used by different platforms:
+- Hex for web
+- RGB for graphics software
+- HSL for design tools
+
+### Color matching
+
+Use the colour picker to select colours from design mockups and get the exact values in your preferred format.
+
+<Tip>
+HSL format is particularly useful for creating colour variations because you can easily adjust lightness while preserving hue and saturation.
+</Tip>
+
+## How it works
+
+**Conversion process:**
+
+1. **Input parsing** - Detects input format (hex, RGB, or HSL)
+2. **Normalization to RGB** - Converts all formats to RGB as an intermediate step
+3. **Multi-format output** - Calculates all six output formats from RGB values
+4. **Display** - Shows colour preview and formatted values
+
+**Palette generation:**
+
+1. Converts current colour to HSL
+2. Creates 9 variations by adjusting lightness in 10% increments
+3. Ensures lightness stays within valid range (0-100%)
+4. Converts each variation back to hex
+5. Displays as clickable swatches
+
+<Info>
+The converter uses precise mathematical algorithms to ensure colour accuracy when converting between formats. RGB serves as the intermediate format for all conversions.
+</Info>
+
+## Conversion algorithms
+
+**Hex to RGB:**
+- Parses hex string into red, green, blue components
+- Each pair of hex digits represents one colour channel (00-FF = 0-255)
+
+**RGB to HSL:**
+- Normalizes RGB values to 0-1 range
+- Calculates hue based on which channel (R, G, or B) is dominant
+- Calculates saturation based on colour intensity
+- Calculates lightness as the average of max and min channels
+
+**RGB to HSV:**
+- Normalizes RGB values
+- Value is the maximum of R, G, B
+- Saturation is based on the difference between max and min channels
+- Hue calculated similarly to HSL
+
+**HSL to RGB:**
+- Uses hue-to-RGB helper function
+- Accounts for saturation and lightness to reconstruct RGB values
+
+## Understanding colour spaces
+
+**RGB** - Additive colour model used by screens. Mixes red, green, and blue light.
+
+**HSL** - Intuitive for designers. Separates colour (hue) from brightness (lightness) and intensity (saturation).
+
+**HSV** - Similar to HSL but uses "value" (brightness) instead of lightness. Common in colour pickers.
+
+**Hex** - Compact representation of RGB. Widely used in web development.
+
+<Note>
+Alpha channel support is included in RGBA and HSLA formats, though the converter defaults to full opacity (1.0). You can manually adjust alpha values in your code.
+</Note>
+
+## Related tools
+
+- **Number base converter** - For converting hex colour codes to decimal RGB values
+- **URL encoder** - For encoding colour values in URL parameters

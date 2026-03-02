@@ -1,0 +1,169 @@
+---
+title: Keyboard shortcuts
+description: Master TryDevUtils keyboard shortcuts for lightning-fast navigation and productivity
+---
+
+TryDevUtils provides comprehensive keyboard shortcuts to help you navigate and execute actions without reaching for your mouse. All shortcuts work across web, desktop, and extension versions.
+
+<Note>
+  Press `?` anytime to display the keyboard shortcuts help dialog.
+</Note>
+
+## Navigation shortcuts
+
+These shortcuts help you move around the application quickly:
+
+<ResponseField name="⌘K / Ctrl+K" type="shortcut">
+  Open the command palette to search and navigate to any utility.
+</ResponseField>
+
+<ResponseField name="/" type="shortcut">
+  Open the command palette (alternative shortcut, works like Vim/Spotlight).
+</ResponseField>
+
+<ResponseField name="Esc" type="shortcut">
+  Go back to the homepage when viewing a utility, or close any open dialog.
+</ResponseField>
+
+<ResponseField name="?" type="shortcut">
+  Show the keyboard shortcuts help dialog.
+</ResponseField>
+
+### Desktop app only
+
+<ResponseField name="⌘F / Ctrl+F" type="shortcut">
+  Focus the sidebar filter input to quickly find utilities in the sidebar.
+</ResponseField>
+
+## Utility action shortcuts
+
+These shortcuts perform actions within utilities:
+
+<ResponseField name="⌘Enter / Ctrl+Enter" type="shortcut">
+  Execute the current utility action (format, convert, generate, etc.).
+  
+  This is the primary action for each utility, such as:
+  - Format JSON in the JSON Toolbox
+  - Convert timestamp in the Timestamp Converter
+  - Generate UUID in the UUID Generator
+  - Execute regex test in the RegExp Tester
+</ResponseField>
+
+<ResponseField name="⌘Shift+C / Ctrl+Shift+C" type="shortcut">
+  Copy the output to your clipboard.
+  
+  <Note>
+    This shortcut only works when no text is selected. If you have text selected, use the standard copy shortcut (⌘C / Ctrl+C) instead.
+  </Note>
+</ResponseField>
+
+<ResponseField name="⌘L / Ctrl+L" type="shortcut">
+  Clear all inputs in the current utility.
+  
+  <Warning>
+    This action cannot be undone. Make sure you've saved any important data before clearing.
+  </Warning>
+</ResponseField>
+
+<ResponseField name="⌘Shift+V / Ctrl+Shift+V" type="shortcut">
+  Paste from clipboard into the current utility's input.
+</ResponseField>
+
+## General shortcuts
+
+Standard keyboard navigation within dialogs and lists:
+
+<ResponseField name="Tab" type="shortcut">
+  Navigate between form elements and interactive components.
+</ResponseField>
+
+<ResponseField name="↑ / ↓" type="shortcut">
+  Navigate up and down in lists (command palette, autocomplete menus, etc.).
+</ResponseField>
+
+<ResponseField name="Enter" type="shortcut">
+  Select the current item or confirm an action.
+</ResponseField>
+
+## Platform differences
+
+Keyboard shortcuts automatically adapt to your platform:
+
+<AccordionGroup>
+  <Accordion title="macOS">
+    - Uses `⌘` (Command) as the primary modifier key
+    - Command palette: `⌘K`
+    - Execute action: `⌘Enter`
+    - Copy output: `⌘Shift+C`
+    - Clear inputs: `⌘L`
+  </Accordion>
+  
+  <Accordion title="Windows & Linux">
+    - Uses `Ctrl` as the primary modifier key
+    - Command palette: `Ctrl+K`
+    - Execute action: `Ctrl+Enter`
+    - Copy output: `Ctrl+Shift+C`
+    - Clear inputs: `Ctrl+L`
+  </Accordion>
+</AccordionGroup>
+
+## Implementing shortcuts in utilities
+
+Utilities can implement keyboard shortcuts by using the `useUtilKeyboardShortcuts` hook:
+
+```tsx
+import { useUtilKeyboardShortcuts } from "@/components/KeyboardShortcuts";
+
+function MyUtility() {
+  const handleExecute = () => {
+    // Execute the utility's primary action
+  };
+  
+  const handleClear = () => {
+    // Clear all inputs
+  };
+  
+  const handleCopy = () => {
+    // Copy output to clipboard
+  };
+  
+  useUtilKeyboardShortcuts({
+    onExecute: handleExecute,
+    onClear: handleClear,
+    onCopy: handleCopy,
+  });
+  
+  return (
+    // Your utility UI
+  );
+}
+```
+
+<Info>
+  The keyboard shortcuts system uses custom events (`trydevutils:execute`, `trydevutils:clear`, `trydevutils:copy`) to communicate between the global keyboard handler and individual utilities.
+</Info>
+
+## Smart typing detection
+
+TryDevUtils intelligently detects when you're typing in an input field and automatically disables conflicting shortcuts:
+
+- Single-key shortcuts (`/`, `?`) are disabled when typing in `<input>`, `<textarea>`, or `contenteditable` elements
+- Modifier-based shortcuts (`⌘K`, `⌘Enter`) work everywhere
+- The `⌘L` shortcut for clearing inputs is carefully designed to avoid conflicts with the browser's address bar focus
+
+## Command palette on homepage
+
+<Tip>
+  When you're on the homepage, typing any letter (a-z, A-Z) automatically opens the command palette with that character already entered. This provides instant search without needing to press `⌘K` first.
+</Tip>
+
+This feature makes it incredibly fast to jump to a utility:
+
+1. Start on the homepage
+2. Type `j` → Command palette opens with "j" entered
+3. See "JSON Toolbox" and "JWT Decoder/Encoder" filtered
+4. Press `Enter` to select the first result
+
+## Source code reference
+
+All keyboard shortcuts are implemented in `/src/components/KeyboardShortcuts.tsx:37-63` with the shortcut definitions in the help dialog.

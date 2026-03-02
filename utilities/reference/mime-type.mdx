@@ -1,0 +1,259 @@
+---
+title: MIME Type Lookup
+description: Look up MIME types by file extension or find extensions by MIME type with a comprehensive database
+---
+
+The MIME Type Lookup utility provides bidirectional lookup between file extensions and MIME types. You can quickly find the correct MIME type for a file extension or discover which extensions use a specific MIME type.
+
+## Features
+
+### Quick lookup
+
+Instantly convert between file extensions and MIME types:
+
+- Enter a file extension (e.g., `.jpg`, `.pdf`) to get the MIME type
+- Enter a MIME type (e.g., `image/jpeg`, `application/pdf`) to get the extension
+- Results include the description for context
+
+The lookup works with or without the leading dot for extensions.
+
+<Tip>
+  Press Enter after typing in the lookup field to instantly get results without clicking the button.
+</Tip>
+
+### Browse all MIME types
+
+Explore the complete database of MIME types:
+
+- View all extensions and their corresponding MIME types
+- See human-readable descriptions for each type
+- Filter by category for focused browsing
+- Search across extensions, MIME types, and descriptions
+
+### Category filtering
+
+Filter MIME types by category:
+
+- **Text**: Plain text, HTML, CSS, JSON, code files
+- **Image**: JPEG, PNG, GIF, SVG, and other image formats
+- **Audio**: MP3, WAV, OGG, FLAC audio formats
+- **Video**: MP4, AVI, WebM video formats
+- **Document**: PDF, Word, Excel, PowerPoint documents
+- **Archive**: ZIP, RAR, 7z, TAR archives
+- **Font**: TrueType, OpenType, WOFF fonts
+- **Executable**: EXE, DMG, DEB, RPM packages
+
+<Info>
+  The database includes over 100 common MIME types covering the most frequently used file formats in web development and applications.
+</Info>
+
+## Use cases
+
+### Setting HTTP headers
+
+Set correct Content-Type headers when serving files:
+
+```javascript
+// Express.js example
+app.get('/download/:filename', (req, res) => {
+  const ext = path.extname(req.params.filename);
+  // .pdf -> application/pdf
+  res.setHeader('Content-Type', getMimeType(ext));
+  res.sendFile(req.params.filename);
+});
+```
+
+### File upload validation
+
+Validate uploaded files by checking MIME types:
+
+```javascript
+const allowedTypes = [
+  'image/jpeg',
+  'image/png', 
+  'image/gif',
+  'application/pdf'
+];
+
+function validateUpload(file) {
+  return allowedTypes.includes(file.mimetype);
+}
+```
+
+<Warning>
+  Don't rely solely on MIME type for security validation. Attackers can spoof MIME types. Always validate file contents and use additional security measures.
+</Warning>
+
+### Email attachments
+
+Set correct MIME types for email attachments:
+
+```javascript
+const attachment = {
+  filename: 'report.pdf',
+  content: pdfBuffer,
+  contentType: 'application/pdf' // From MIME type lookup
+};
+```
+
+### API responses
+
+Return appropriate Content-Type headers for API responses:
+
+```javascript
+// JSON response
+res.setHeader('Content-Type', 'application/json');
+
+// XML response  
+res.setHeader('Content-Type', 'text/xml');
+
+// CSV download
+res.setHeader('Content-Type', 'text/csv');
+```
+
+<Note>
+  Modern frameworks often set Content-Type automatically, but knowing the correct MIME type is still important for debugging and explicit configuration.
+</Note>
+
+### Browser behavior
+
+Understanding MIME types helps control browser behavior:
+
+- **application/octet-stream**: Forces download instead of display
+- **text/plain**: Displays as plain text
+- **application/pdf**: Opens in browser PDF viewer
+- **image/*****: Displays inline as image
+
+## Common MIME types
+
+### Web content
+
+| Extension | MIME Type | Usage |
+|-----------|-----------|-------|
+| .html | text/html | HTML pages |
+| .css | text/css | Stylesheets |
+| .js | application/javascript | JavaScript |
+| .json | application/json | JSON data |
+| .xml | text/xml | XML documents |
+
+### Images
+
+| Extension | MIME Type | Usage |
+|-----------|-----------|-------|
+| .jpg, .jpeg | image/jpeg | JPEG images |
+| .png | image/png | PNG images |
+| .gif | image/gif | GIF images |
+| .svg | image/svg+xml | SVG vectors |
+| .webp | image/webp | WebP images |
+
+<Info>
+  SVG files use `image/svg+xml` because they are XML-based vector graphics, not raster images.
+</Info>
+
+### Documents
+
+| Extension | MIME Type | Usage |
+|-----------|-----------|-------|
+| .pdf | application/pdf | PDF documents |
+| .docx | application/vnd.openxmlformats-officedocument.wordprocessingml.document | Word documents |
+| .xlsx | application/vnd.openxmlformats-officedocument.spreadsheetml.sheet | Excel spreadsheets |
+| .pptx | application/vnd.openxmlformats-officedocument.presentationml.presentation | PowerPoint presentations |
+
+### Archives
+
+| Extension | MIME Type | Usage |
+|-----------|-----------|-------|
+| .zip | application/zip | ZIP archives |
+| .tar | application/x-tar | TAR archives |
+| .gz | application/gzip | GZIP compressed |
+| .7z | application/x-7z-compressed | 7-Zip archives |
+
+## MIME type structure
+
+### Format
+
+MIME types follow the format: `type/subtype`
+
+**Type** (main category):
+- `text`: Textual content
+- `image`: Image content
+- `audio`: Audio content
+- `video`: Video content
+- `application`: Binary or mixed content
+- `multipart`: Multiple parts (used in email)
+
+**Subtype** (specific format):
+- Identifies the exact format within the main category
+- Can include vendor prefixes (e.g., `vnd.ms-excel`)
+- Can include suffixes (e.g., `image/svg+xml`)
+
+<Tip>
+  Vendor-specific subtypes use the `vnd.` prefix, while personal/experimental types use `prs.` or `x-` prefixes.
+</Tip>
+
+### Parameters
+
+MIME types can include parameters:
+
+```
+text/html; charset=utf-8
+application/json; charset=utf-8
+text/plain; charset=iso-8859-1
+```
+
+The `charset` parameter specifies the character encoding for text-based MIME types.
+
+## Best practices
+
+### Accurate MIME types
+
+Always use accurate MIME types:
+
+- Don't use `text/plain` for JSON or HTML content
+- Don't use `application/octet-stream` when a specific type exists
+- Match the MIME type to the actual content format
+
+<Warning>
+  Incorrect MIME types can cause browsers to misinterpret content, leading to security vulnerabilities (MIME sniffing attacks) or broken functionality.
+</Warning>
+
+### Content-Type headers
+
+When serving files:
+
+```javascript
+// Good - specific MIME type
+res.setHeader('Content-Type', 'application/json');
+
+// Bad - generic fallback when specific type is known
+res.setHeader('Content-Type', 'application/octet-stream');
+```
+
+### MIME type validation
+
+Validate MIME types on both client and server:
+
+```javascript
+// Client-side (HTML5)
+<input type="file" accept=".jpg,.jpeg,.png" />
+<input type="file" accept="image/jpeg,image/png" />
+
+// Server-side (Node.js)
+if (!allowedMimeTypes.includes(file.mimetype)) {
+  throw new Error('Invalid file type');
+}
+```
+
+<Note>
+  The `accept` attribute in HTML5 file inputs can take both MIME types and file extensions. Using MIME types is more precise.
+</Note>
+
+### X-Content-Type-Options
+
+Prevent MIME type sniffing:
+
+```
+X-Content-Type-Options: nosniff
+```
+
+This header tells browsers to strictly follow the declared Content-Type and not try to guess the MIME type by examining the content.

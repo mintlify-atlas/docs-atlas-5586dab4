@@ -1,0 +1,316 @@
+---
+title: Cron parser
+description: Parse and validate cron expressions with human-readable descriptions and next run times
+---
+
+The cron parser helps you understand and validate cron expressions. It converts cron syntax into plain English and shows when jobs will run next.
+
+## Features
+
+### Human-readable descriptions
+
+Convert cron expressions to natural language:
+
+- Verbose, easy-to-understand descriptions
+- 24-hour time format
+- Clear explanation of when jobs run
+- Powered by the cronstrue library
+
+<Note>
+The parser uses cronstrue to generate human-readable descriptions from cron syntax.
+</Note>
+
+### Next occurrences
+
+See the next 5 times a cron job will run:
+
+- Real-time calculation from current date
+- Local timezone display
+- Useful for verifying job schedules
+- Preview upcoming executions
+
+### Visual field breakdown
+
+Color-coded field display:
+
+- **Minute** (0-59) - Sky blue
+- **Hour** (0-23) - Emerald green
+- **Day of month** (1-31) - Amber
+- **Month** (1-12) - Purple
+- **Day of week** (0-6) - Rose
+
+### Syntax validation
+
+Validate cron expression format:
+
+- 5-field or 6-field cron expressions
+- Error messages for invalid syntax
+- Real-time validation as you type
+- Support for standard cron syntax
+
+## Cron syntax
+
+Cron expressions consist of 5 fields:
+
+```
+* * * * *
+│ │ │ │ │
+│ │ │ │ └─── Day of week (0-6) (Sunday=0)
+│ │ │ └────── Month (1-12)
+│ │ └───────── Day of month (1-31)
+│ └──────────── Hour (0-23)
+└─────────────── Minute (0-59)
+```
+
+<Info>
+The parser supports both numeric values and named values (MON-SUN for days, JAN-DEC for months).
+</Info>
+
+## Special characters
+
+### Asterisk (*)
+
+Matches any value:
+
+```
+* * * * * - Every minute
+```
+
+### Comma (,)
+
+List of values:
+
+```
+0 9,12,15 * * * - At 9 AM, 12 PM, and 3 PM
+```
+
+### Hyphen (-)
+
+Range of values:
+
+```
+0 9-17 * * MON-FRI - Every hour from 9 AM to 5 PM, Monday through Friday
+```
+
+### Slash (/)
+
+Step values:
+
+```
+*/15 * * * * - Every 15 minutes
+0 */2 * * * - Every 2 hours
+```
+
+## Common patterns
+
+### Every minute
+
+```
+* * * * *
+```
+
+### Hourly
+
+```
+0 * * * *
+```
+
+Runs at the start of every hour.
+
+### Daily at midnight
+
+```
+0 0 * * *
+```
+
+### Weekly on Sunday
+
+```
+0 0 * * 0
+```
+
+Runs at midnight every Sunday.
+
+### Monthly on the 1st
+
+```
+0 0 1 * *
+```
+
+Runs at midnight on the first day of each month.
+
+### Every 5 minutes
+
+```
+*/5 * * * *
+```
+
+### Business hours
+
+```
+0 9-17 * * MON-FRI
+```
+
+Runs every hour from 9 AM to 5 PM, Monday through Friday.
+
+## Examples
+
+The parser includes preset examples:
+
+### Morning weekday schedule
+
+```
+0 9 * * MON-FRI
+```
+
+**Description:** At 9:00 AM, Monday through Friday
+
+### Every 2 hours
+
+```
+0 */2 * * *
+```
+
+**Description:** Every 2 hours
+
+### First of the month
+
+```
+0 0 1 * *
+```
+
+**Description:** At midnight on the first day of every month
+
+### Every 15 minutes
+
+```
+*/15 * * * *
+```
+
+**Description:** Every 15 minutes
+
+### Sunday evening
+
+```
+0 22 * * SUN
+```
+
+**Description:** At 10:00 PM on Sunday
+
+<Tip>
+Click "Examples" to load these expressions and see their next run times.
+</Tip>
+
+## Use cases
+
+### Job scheduling
+
+Verify cron schedules for automated jobs:
+
+```
+0 2 * * * - Daily backup at 2 AM
+*/30 * * * * - Health check every 30 minutes
+0 0 * * 0 - Weekly report on Sundays
+```
+
+### CI/CD pipelines
+
+Validate scheduled pipeline runs:
+
+```
+0 9 * * MON-FRI - Build on weekday mornings
+0 0 * * * - Nightly deployment
+```
+
+### Maintenance windows
+
+Plan system maintenance schedules:
+
+```
+0 3 1 * * - Monthly maintenance on 1st at 3 AM
+0 2 * * 0 - Weekly maintenance on Sundays at 2 AM
+```
+
+### Data processing
+
+Schedule ETL and data processing jobs:
+
+```
+0 */4 * * * - Process data every 4 hours
+0 1 * * * - Daily aggregation at 1 AM
+```
+
+## Named values
+
+Use names instead of numbers for better readability:
+
+### Day names
+
+```
+SUN, MON, TUE, WED, THU, FRI, SAT
+```
+
+Example: `0 9 * * MON-FRI`
+
+### Month names
+
+```
+JAN, FEB, MAR, APR, MAY, JUN, JUL, AUG, SEP, OCT, NOV, DEC
+```
+
+Example: `0 0 1 JAN,JUL *` (January 1st and July 1st)
+
+## Syntax guide panel
+
+The right panel shows:
+
+- **Format overview** - Visual representation of 5 fields
+- **Characters** - Special characters and their meanings
+- **Names** - Day and month name support
+- **Common patterns** - Quick reference for frequent schedules
+
+## Keyboard shortcuts
+
+- **Cmd/Ctrl + Enter** - Parse cron expression
+- **Cmd/Ctrl + K** - Clear input
+- **Cmd/Ctrl + C** - Copy human-readable description
+
+## Tips
+
+<Tip>
+Use the next 5 occurrences to verify your cron expression runs at the expected times.
+</Tip>
+
+<Tip>
+Name-based expressions (MON-FRI) are more readable than numeric equivalents (1-5).
+</Tip>
+
+<Tip>
+The visual field breakdown helps you understand which part of the expression controls what.
+</Tip>
+
+## Validation errors
+
+Common error messages:
+
+### Invalid field count
+
+"Cron expression must have 5 or 6 fields"
+
+Ensure your expression has the correct number of space-separated fields.
+
+### Invalid range
+
+Values must be within valid ranges for each field:
+
+- Minute: 0-59
+- Hour: 0-23
+- Day: 1-31
+- Month: 1-12
+- Day of week: 0-6
+
+### No matching times
+
+"No matching times found in the next 4 years"
+
+The expression may specify an impossible date combination.

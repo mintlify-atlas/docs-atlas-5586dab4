@@ -1,0 +1,435 @@
+---
+title: Testing TryDevUtils
+description: Run tests and ensure code quality for TryDevUtils across all platforms
+---
+
+This guide covers testing strategies, running tests, and ensuring code quality for TryDevUtils.
+
+## Testing overview
+
+TryDevUtils uses Playwright for end-to-end testing of the web application. The test suite verifies that all developer utilities work without console errors.
+
+## Running tests
+
+Run the complete test suite:
+
+<CodeGroup>
+```bash Local testing
+npm run test
+```
+
+```bash CI testing
+npm run test:ci
+```
+
+```bash What it does
+# Builds production app
+# Starts preview server on port 3000
+# Runs Playwright tests
+# Reports results
+```
+</CodeGroup>
+
+### Test commands explained
+
+<Tabs>
+  <Tab title="npm run test">
+    ```bash
+    vite preview --port 3000 --host & 
+    sleep 5 && 
+    npx playwright test
+    ```
+
+    **Local development testing**:
+    - Starts preview server in background
+    - Waits 5 seconds for server to be ready
+    - Runs Playwright tests with HTML reporter
+    - Opens interactive report on failure
+  </Tab>
+
+  <Tab title="npm run test:ci">
+    ```bash
+    npx playwright install --with-deps chromium && 
+    vite preview --port 3000 --host & 
+    sleep 5 && 
+    npx playwright test --reporter=line
+    ```
+
+    **CI/CD pipeline testing**:
+    - Installs Playwright browsers and dependencies
+    - Uses line reporter for CI logs
+    - Retries failed tests (configured in Playwright config)
+    - Runs in headless mode
+  </Tab>
+</Tabs>
+
+## Test structure
+
+Tests are located in the `tests/` directory:
+
+```
+tests/
+└── console-errors.spec.ts    # Main test suite
+```
+
+### Console errors test
+
+This test verifies that every utility loads without JavaScript errors:
+
+```typescript
+// tests/console-errors.spec.ts
+import { test, expect } from '@playwright/test';
+
+test('No console errors when clicking all utils', async ({ page }) => {
+  const consoleErrors: string[] = [];
+
+  // Listen for console errors
+  page.on('console', msg => {
+    if (msg.type() === 'error') {
+      consoleErrors.push(msg.text());
+    }
+  });
+
+  // Navigate to the app
+  await page.goto('/');
+
+  // Wait for the page to load
+  await page.waitForSelector('h1:has-text("TryDevUtils")');
+
+  // Get all utility links
+  const utilLinks = page.locator('a[href^="/"]:not([href="/"])');
+  const count = await utilLinks.count();
+
+  // Test each utility
+  for (let i = 0; i < count; i++) {
+    const link = utilLinks.nth(i);
+    const href = await link.getAttribute('href');
+
+    await link.click();
+    await page.waitForLoadState('networkidle');
+    await page.waitForTimeout(500);
+
+    // Assert no console errors
+    expect(consoleErrors).toHaveLength(0);
+
+    // Return home
+    await page.goto('/');
+  }
+});
+```
+
+### What this test covers
+
+<Steps>
+  <Step title="Page load">
+    Verifies the home page loads successfully and displays the TryDevUtils heading.
+  </Step>
+
+  <Step title="Navigation">
+    Tests navigation to every utility by clicking each link in the navigation.
+  </Step>
+
+  <Step title="Error detection">
+    Captures all console errors during navigation and utility interaction.
+  </Step>
+
+  <Step title="Utility functionality">
+    Ensures each utility loads without throwing JavaScript errors.
+  </Step>
+</Steps>
+
+## Playwright configuration
+
+The Playwright config is located in `playwright.config.ts`:
+
+```typescript
+import { defineConfig, devices } from '@playwright/test';
+
+export default defineConfig({
+  testDir: './tests',
+  fullyParallel: false,              // Disable parallel for CI stability
+  forbidOnly: !!process.env.CI,      // Prevent .only in CI
+  retries: process.env.CI ? 2 : 0,   // Retry failed tests in CI
+  workers: process.env.CI ? 1 : undefined,  // Single worker in CI
+  reporter: process.env.CI ? 'line' : 'html',
+  timeout: 120000,                   // 2 minutes per test
+  expect: {
+    timeout: 10000,                  // 10 seconds for assertions
+  },
+  use: {
+    baseURL: 'http://localhost:3000',
+    trace: 'retain-on-failure',      // Capture trace on failure
+    headless: true,
+    actionTimeout: 10000,
+  },
+  projects: [
+    {
+      name: 'chromium',
+      use: { ...devices['Desktop Chrome'] },
+    },
+  ],
+});
+```
+
+### Key configuration options
+
+- **fullyParallel**: Disabled for CI stability (single worker)
+- **retries**: 2 retries in CI, 0 locally
+- **timeout**: 2 minutes per test (covers all utilities)
+- **trace**: Captured only on failure to save disk space
+- **baseURL**: `http://localhost:3000` (preview server)
+- **projects**: Only Chromium (primary browser target)
+
+## Viewing test results
+
+### Local development
+
+After running `npm run test`, open the HTML report:
+
+```bash
+npx playwright show-report
+```
+
+This opens an interactive report showing:
+- Passed/failed tests
+- Test duration
+- Screenshots on failure
+- Trace viewer for debugging
+
+### CI/CD
+
+In GitHub Actions, test results appear in the workflow logs:
+
+```yaml
+# .github/workflows/ci-vercel.yml
+- name: Build and run tests
+  run: npm run build:ci
+```
+
+View results in the Actions tab of your GitHub repository.
+
+## Debugging test failures
+
+### Run tests in headed mode
+
+See the browser while tests run:
+
+```bash
+npx playwright test --headed
+```
+
+### Debug a specific test
+
+Use Playwright's debug mode:
+
+```bash
+npx playwright test --debug
+```
+
+This opens:
+- Browser window (paused)
+- Playwright Inspector (step through test)
+- Browser DevTools (inspect page)
+
+### View test traces
+
+If a test fails, view the trace:
+
+```bash
+npx playwright show-trace trace.zip
+```
+
+The trace includes:
+- Screenshots at each step
+- Network requests
+- Console logs
+- DOM snapshots
+
+## Code quality checks
+
+Beyond Playwright tests, ensure code quality with these tools:
+
+### Type checking
+
+Run TypeScript compiler to catch type errors:
+
+```bash
+npx tsc --noEmit
+```
+
+Or use the check command:
+
+```bash
+npm run check  # tsc && vite build
+```
+
+### Linting
+
+Run ESLint to enforce code standards:
+
+```bash
+npm run lint
+```
+
+The ESLint config includes:
+- TypeScript ESLint rules
+- React Hooks rules
+- React Refresh rules
+
+```javascript
+// eslint.config.js
+export default tseslint.config(
+  { ignores: ["dist"] },
+  {
+    extends: [js.configs.recommended, ...tseslint.configs.recommended],
+    files: ["**/*.{ts,tsx}"],
+    plugins: {
+      "react-hooks": reactHooks,
+      "react-refresh": reactRefresh,
+    },
+    rules: {
+      ...reactHooks.configs.recommended.rules,
+      "react-refresh/only-export-components": [
+        "warn",
+        { allowConstantExport: true },
+      ],
+    },
+  }
+);
+```
+
+## Writing new tests
+
+When adding new features, consider adding tests:
+
+<Steps>
+  <Step title="Create test file">
+    ```bash
+    touch tests/your-feature.spec.ts
+    ```
+  </Step>
+
+  <Step title="Write test">
+    ```typescript
+    import { test, expect } from '@playwright/test';
+
+    test('your feature works', async ({ page }) => {
+      await page.goto('/');
+      
+      // Your test steps
+      await page.click('button:has-text("Your Button")');
+      
+      // Assertions
+      await expect(page.locator('.result')).toBeVisible();
+    });
+    ```
+  </Step>
+
+  <Step title="Run the test">
+    ```bash
+    npx playwright test tests/your-feature.spec.ts
+    ```
+  </Step>
+</Steps>
+
+### Test best practices
+
+- Use descriptive test names
+- Wait for elements before interacting
+- Use `waitForLoadState('networkidle')` after navigation
+- Capture screenshots on failure
+- Keep tests independent (no shared state)
+- Clean up after tests (return to home page)
+
+## CI/CD integration
+
+Tests run automatically on GitHub Actions:
+
+```yaml
+# .github/workflows/ci-vercel.yml
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  build-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps chromium
+
+      - name: Build and run tests
+        run: npm run build:ci
+```
+
+### Test failure handling
+
+- **Retries**: Tests retry up to 2 times in CI
+- **Artifacts**: Failed test traces are uploaded
+- **Notifications**: Failed builds trigger GitHub notifications
+
+## Performance testing
+
+While not automated, you can manually test performance:
+
+### Lighthouse
+
+Run Lighthouse on the production build:
+
+```bash
+npm run build
+npm run preview
+
+# In another terminal
+npx lighthouse http://localhost:8080 --view
+```
+
+### Bundle size analysis
+
+Check bundle sizes after building:
+
+```bash
+npm run build
+du -sh dist/*
+```
+
+Vite shows chunk sizes during build:
+
+```
+dist/assets/vendor-abc123.js   150.23 kB
+dist/assets/ui-def456.js       85.41 kB
+dist/assets/utils-ghi789.js    42.18 kB
+```
+
+## Testing checklist
+
+Before committing code:
+
+- [ ] Run `npm run test` locally
+- [ ] Run `npm run lint` to check code style
+- [ ] Run `npm run check` to verify types
+- [ ] Test manually in browser (dev mode)
+- [ ] Test production build (`npm run preview`)
+- [ ] Verify no console errors or warnings
+- [ ] Check network tab for failed requests
+- [ ] Test on different screen sizes
+
+## Next steps
+
+- Learn about [deployment](/guides/deployment) pipelines
+- Review the [building guide](/guides/building)
+- Return to [development](/guides/development) setup

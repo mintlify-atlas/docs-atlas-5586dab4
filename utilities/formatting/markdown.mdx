@@ -1,0 +1,255 @@
+---
+title: Markdown preview
+description: Write and preview Markdown in real-time with a live rendered view
+---
+
+The Markdown preview utility provides a split-screen editor and preview for writing Markdown. You can see your formatted output in real-time as you type.
+
+## Features
+
+### Live preview
+
+See rendered Markdown as you type:
+
+- Real-time rendering
+- Split-screen layout
+- No delay or refresh needed
+- Instant feedback on formatting
+
+<Note>
+The preview uses react-markdown, which is dynamically loaded to optimize initial bundle size.
+</Note>
+
+### Full Markdown support
+
+Supports all standard Markdown features:
+
+- **Headings** - # H1 through ###### H6
+- **Bold** - `**bold text**` or `__bold text__`
+- **Italic** - `*italic text*` or `_italic text_`
+- **Links** - `[link text](https://example.com)`
+- **Lists** - Ordered and unordered lists
+- **Code blocks** - Inline and fenced code blocks
+- **Blockquotes** - `> quoted text`
+- **Images** - `![alt text](image-url)`
+- **Tables** - GitHub-flavored tables
+- **Horizontal rules** - `---` or `***`
+
+### Dark mode support
+
+The preview adapts to your theme:
+
+- Light mode styling with prose classes
+- Dark mode with prose-invert
+- Readable typography
+- Consistent with your interface theme
+
+### Copy functionality
+
+Copy Markdown source to clipboard:
+
+- Copy button in the editor section
+- Preserves original formatting
+- Use in other applications
+- Quick export of your content
+
+## Use cases
+
+### Documentation writing
+
+Write README files and documentation:
+
+```markdown
+# Welcome to Markdown Preview
+
+This is a **live** preview of your markdown.
+
+## Features:
+- Bold text
+- *Italics*
+- Lists
+- [Links](https://example.com)
+
+```
+code blocks
+```
+```
+
+### Blog posts
+
+Draft blog posts and articles with proper formatting preview.
+
+### GitHub content
+
+Write GitHub README, issues, and pull request descriptions:
+
+```markdown
+## Bug Report
+
+**Description:** The app crashes when...
+
+**Steps to reproduce:**
+1. Open the app
+2. Navigate to settings
+3. Click the export button
+
+**Expected:** Should download file
+**Actual:** App crashes
+```
+
+### Note-taking
+
+Take formatted notes with quick preview:
+
+```markdown
+## Meeting Notes - 2024-03-15
+
+### Attendees
+- John Smith
+- Jane Doe
+
+### Action Items
+- [ ] Review proposal
+- [ ] Update documentation
+- [x] Send meeting notes
+```
+
+### Technical writing
+
+Write technical documentation with code examples:
+
+```markdown
+## API Usage
+
+To authenticate, send a POST request:
+
+```javascript
+fetch('/api/auth', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({ username, password })
+})
+```
+```
+
+## Split-screen layout
+
+The editor uses a two-column layout:
+
+- **Left panel** - Markdown editor with syntax highlighting
+- **Right panel** - Live preview of rendered content
+- **Responsive** - Stacks on mobile devices
+- **Resizable** - Adjust panel sizes as needed
+
+## Default content
+
+The editor loads with example content:
+
+```markdown
+# Welcome to Markdown Preview
+
+This is a **live** preview of your markdown.
+
+## Features:
+- Bold text
+- *Italics*
+- Lists
+- [Links](https://example.com)
+
+```
+code blocks
+```
+```
+
+<Info>
+Clear the default content to start with a blank editor.
+</Info>
+
+## Keyboard shortcuts
+
+- **Cmd/Ctrl + K** - Clear all content
+- **Cmd/Ctrl + C** - Copy Markdown to clipboard
+
+## Tips
+
+<Tip>
+Use the preview to verify link formatting before publishing to GitHub or other platforms.
+</Tip>
+
+<Tip>
+The editor preserves your content while you work - no auto-save needed for short sessions.
+</Tip>
+
+<Tip>
+Test table formatting in the preview before adding to documentation.
+</Tip>
+
+## Markdown syntax reference
+
+### Headings
+
+```markdown
+# Heading 1
+## Heading 2
+### Heading 3
+#### Heading 4
+##### Heading 5
+###### Heading 6
+```
+
+### Emphasis
+
+```markdown
+*italic* or _italic_
+**bold** or __bold__
+***bold italic***
+~~strikethrough~~
+```
+
+### Lists
+
+```markdown
+Unordered:
+- Item 1
+- Item 2
+  - Nested item
+
+Ordered:
+1. First
+2. Second
+3. Third
+```
+
+### Links and images
+
+```markdown
+[Link text](https://example.com)
+[Link with title](https://example.com "Title")
+![Image alt text](image-url.jpg)
+```
+
+### Code
+
+```markdown
+Inline `code` with backticks
+
+```language
+Code block with syntax highlighting
+```
+```
+
+### Blockquotes
+
+```markdown
+> This is a blockquote
+> It can span multiple lines
+```
+
+### Tables
+
+```markdown
+| Column 1 | Column 2 | Column 3 |
+|----------|----------|----------|
+| Row 1    | Data     | Data     |
+| Row 2    | Data     | Data     |
+```

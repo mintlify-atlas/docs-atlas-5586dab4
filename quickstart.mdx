@@ -1,80 +1,302 @@
 ---
-title: "Quickstart"
-description: "Start building awesome documentation in minutes"
+title: Quickstart
+description: Get started with TryDevUtils in under 2 minutes. Learn how to access the platform and use your first utility.
 ---
 
-## Get started in three steps
+# Quickstart guide
 
-Get your documentation site running locally and make your first customization.
+Get up and running with TryDevUtils in minutes. This guide will walk you through accessing the platform and using your first developer utility.
 
-### Step 1: Set up your local environment
+## Choose your platform
 
-<AccordionGroup>
-  <Accordion icon="copy" title="Clone your docs locally">
-    During the onboarding process, you created a GitHub repository with your docs content if you didn't already have one. You can find a link to this repository in your [dashboard](https://dashboard.mintlify.com).
+TryDevUtils is available on three platforms. Choose the one that fits your workflow:
+
+<CardGroup cols={3}>
+  <Card title="Web app" icon="globe" href="https://trydevutils.com">
+    No installation required—use instantly in your browser
+  </Card>
+  <Card title="Desktop app" icon="desktop" href="https://github.com/gammabowl/try-devutils/releases">
+    Native apps for macOS, Windows, and Linux
+  </Card>
+  <Card title="Chrome extension" icon="chrome" href="https://chromewebstore.google.com/detail/trydevutils/mkbkmocnckocblfdonfjmeeneojabadg">
+    Access from your browser toolbar
+  </Card>
+</CardGroup>
+
+## Installation
+
+<Steps>
+  <Step title="Web app">
+    Simply visit [trydevutils.com](https://trydevutils.com) in any modern browser. No installation required.
     
-    To clone the repository locally so that you can make and preview changes to your docs, follow the [Cloning a repository](https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository) guide in the GitHub docs.
-  </Accordion>
-  <Accordion icon="rectangle-terminal" title="Start the preview server">
-    1. Install the Mintlify CLI: `npm i -g mint`
-    2. Navigate to your docs directory and run: `mint dev`
-    3. Open `http://localhost:3000` to see your docs live!
+    **Supported browsers:**
+    - Chrome/Edge 90+
+    - Firefox 88+
+    - Safari 14+
+  </Step>
+  
+  <Step title="Desktop app">
+    Download the native app for your operating system from the [GitHub releases page](https://github.com/gammabowl/try-devutils/releases).
     
-    <Tip>Your preview updates automatically as you edit files.</Tip>
-  </Accordion>
-</AccordionGroup>
-
-### Step 2: Deploy your changes
-
-<AccordionGroup>
-  <Accordion icon="github" title="Install our GitHub app">
-    Install the Mintlify GitHub app from your [dashboard](https://dashboard.mintlify.com/settings/organization/github-app).
+    **macOS**
+    1. Download the `.dmg` file
+    2. Open the downloaded file
+    3. Drag TryDevUtils to Applications
+    4. Launch from Applications folder
     
-    Our GitHub app automatically deploys your changes to your docs site, so you don't need to manage deployments yourself.
-</Accordion>
-<Accordion icon="palette" title="Update your site name and colors">
-    For a first change, let's update the name and colors of your docs site.
+    **Windows**
+    1. Download the `.exe` installer
+    2. Run the installer
+    3. Follow the installation wizard
+    4. Launch from Start menu or desktop shortcut
+    
+    **Linux**
+    1. Download the `.AppImage` or `.deb` file
+    2. Make it executable: `chmod +x TryDevUtils.AppImage`
+    3. Run the application
+    
+    <Info>
+    The desktop app works completely offline after installation. All utilities function without an internet connection.
+    </Info>
+  </Step>
+  
+  <Step title="Chrome extension">
+    Install the extension from the [Chrome Web Store](https://chromewebstore.google.com/detail/trydevutils/mkbkmocnckocblfdonfjmeeneojabadg).
+    
+    1. Visit the Chrome Web Store link
+    2. Click "Add to Chrome"
+    3. Confirm the installation
+    4. Click the extension icon in your toolbar to open TryDevUtils
+    
+    <Tip>
+    Pin the extension to your toolbar for quick access by right-clicking the extension icon and selecting "Pin".
+    </Tip>
+  </Step>
+</Steps>
 
-    1. Open `docs.json` in your editor.
-    2. Change the `"name"` field to your project name.
-    3. Update the `"colors"` to match your brand.
-    4. Save and see your changes instantly at `http://localhost:3000`.
+## Using your first utility
 
-    <Tip>Try changing the primary color to see an immediate difference!</Tip>
-  </Accordion>
-</AccordionGroup>
+Let's walk through using the JSON Toolbox to format and validate a JSON document.
 
-### Step 3: Go live
+<Steps>
+  <Step title="Open the command palette">
+    From the TryDevUtils homepage, open the command palette using one of these methods:
+    
+    - Press `⌘K` (Mac) or `Ctrl+K` (Windows/Linux)
+    - Press `/` from anywhere on the homepage
+    - Click the "Search" button in the header
+    - Simply start typing any letter from the homepage
+    
+    The command palette allows you to quickly search and navigate to any of the 22 available utilities.
+  </Step>
+  
+  <Step title="Find the JSON Toolbox">
+    In the command palette, type `json` to filter the utilities. You'll see the JSON Toolbox appear in the results.
+    
+    Use arrow keys (↑/↓) to navigate and press `Enter` to select, or simply click on "JSON Toolbox".
+    
+    <Info>
+    The search works across utility names, descriptions, and categories. Try searching for "format", "validate", or "encoding" to discover utilities.
+    </Info>
+  </Step>
+  
+  <Step title="Paste your JSON">
+    In the JSON Toolbox, you'll see a text input area. Paste or type your JSON data. Try this example:
+    
+    ```json
+    {"name":"TryDevUtils","type":"developer utilities","features":["fast","private","open source"]}
+    ```
+    
+    The JSON Toolbox automatically:
+    - Validates your JSON in real-time
+    - Highlights syntax errors
+    - Shows formatting options
+  </Step>
+  
+  <Step title="Format and validate">
+    The JSON will be automatically formatted and validated. The JSON Toolbox provides several features:
+    
+    - **Format**: Beautify with proper indentation
+    - **Minify**: Compress to a single line
+    - **Validate**: Check for syntax errors
+    - **Diff**: Compare two JSON documents
+    - **Schema**: Generate JSON Schema
+    - **Query**: Use JSONPath to query data
+    
+    <Tip>
+    Press `⌘Enter` (Mac) or `Ctrl+Enter` (Windows/Linux) to quickly execute the current action in any utility.
+    </Tip>
+  </Step>
+  
+  <Step title="Copy the result">
+    Once your JSON is formatted, copy it to your clipboard:
+    
+    - Click the "Copy" button
+    - Or press `⌘Shift+C` (Mac) or `Ctrl+Shift+C` (Windows/Linux)
+    
+    You'll see a confirmation toast notification when the content is copied.
+  </Step>
+</Steps>
 
-<Accordion icon="rocket" title="Publish your docs">
-  1. Commit and push your changes.
-  2. Your docs will update and be live in moments!
-</Accordion>
+## Exploring more utilities
+
+Now that you've used your first utility, explore the other 21 tools available:
+
+### Quick access methods
+
+<CardGroup cols={2}>
+  <Card title="Command palette" icon="search">
+    Press `⌘K` or `/` to search all utilities by name, description, or category
+  </Card>
+  <Card title="Homepage grid" icon="grid">
+    Browse all 22 utilities organized by category on the homepage
+  </Card>
+  <Card title="Favorites" icon="heart">
+    Click the heart icon on any utility to add it to your favorites for quick access
+  </Card>
+  <Card title="Direct navigation" icon="link">
+    Bookmark specific utilities—each has its own URL (e.g., `/base64`, `/jwt`)
+  </Card>
+</CardGroup>
+
+### Popular utilities to try next
+
+<Steps>
+  <Step title="Base64 Converter" icon="binary">
+    Encode and decode Base64 strings. Perfect for API work and data transmission.
+    
+    **Try it**: Open command palette → type "base64" → paste encoded data
+    
+    **Use case**: Decode Base64-encoded API responses or encode binary data for JSON payloads.
+  </Step>
+  
+  <Step title="JWT Decoder" icon="key">
+    Decode and validate JSON Web Tokens to inspect claims and verify signatures.
+    
+    **Try it**: Open command palette → type "jwt" → paste your token
+    
+    **Use case**: Debug authentication issues by inspecting JWT headers and payloads.
+  </Step>
+  
+  <Step title="RegExp Tester" icon="search">
+    Test and debug regular expressions with real-time matching and highlighting.
+    
+    **Try it**: Open command palette → type "regex" → enter your pattern
+    
+    **Use case**: Validate regex patterns before using them in your code.
+  </Step>
+  
+  <Step title="Hash Generator" icon="hash">
+    Generate MD5, SHA1, SHA256, SHA512, and Bcrypt hashes from text.
+    
+    **Try it**: Open command palette → type "hash" → enter text to hash
+    
+    **Use case**: Generate checksums for file verification or test password hashing.
+  </Step>
+</Steps>
+
+## Keyboard shortcuts
+
+TryDevUtils is designed for keyboard-driven workflows. Learn these shortcuts to boost your productivity:
+
+### Global shortcuts
+
+| Shortcut | Action |
+|----------|--------|
+| `⌘K` or `Ctrl+K` | Open command palette |
+| `/` | Open command palette (from homepage) |
+| `?` | Show all keyboard shortcuts |
+| `Esc` | Return to homepage or close dialogs |
+
+### Utility shortcuts
+
+These shortcuts work within any utility:
+
+| Shortcut | Action |
+|----------|--------|
+| `⌘Enter` or `Ctrl+Enter` | Execute/format/convert |
+| `⌘Shift+C` or `Ctrl+Shift+C` | Copy output to clipboard |
+| `⌘L` or `Ctrl+L` | Clear all inputs |
+| `⌘Shift+V` or `Ctrl+Shift+V` | Paste from clipboard |
+
+<Note>
+Press `?` anywhere in TryDevUtils to see the complete keyboard shortcuts reference.
+</Note>
+
+## Tips for power users
+
+<CardGroup cols={2}>
+  <Card title="Use favorites" icon="star">
+    Click the heart icon on utilities you use frequently. They'll appear at the top of your homepage.
+  </Card>
+  
+  <Card title="Bookmark utilities" icon="bookmark">
+    Each utility has a unique URL. Bookmark `/jwt`, `/base64`, etc. for instant access.
+  </Card>
+  
+  <Card title="Master the command palette" icon="keyboard">
+    The command palette supports fuzzy search. Type "b64" to find "Base64 Converter".
+  </Card>
+  
+  <Card title="Theme preference" icon="moon">
+    Toggle between light and dark themes using the theme button in the header. Your preference is saved.
+  </Card>
+</CardGroup>
+
+## Extension features
+
+The Chrome extension includes additional features:
+
+- **Sidebar navigation**: Browse utilities by category in the left sidebar
+- **Compact layout**: Optimized for smaller windows and side panels
+- **Same privacy**: All processing happens locally, even in the extension
+- **Sync with web**: Your favorites and preferences work across platforms
+
+<Info>
+The extension requires Chrome or Edge version 90 or higher.
+</Info>
+
+## Desktop app features
+
+The desktop app provides additional benefits:
+
+- **Offline support**: Works without an internet connection
+- **Native performance**: Faster startup and execution
+- **System integration**: Appears in your application launcher
+- **Auto-updates**: Automatically checks for new versions
+- **Platform native**: Follows your OS theme and conventions
+
+## Getting help
+
+If you encounter any issues or have questions:
+
+<CardGroup cols={2}>
+  <Card title="Report a bug" icon="bug" href="https://github.com/gammabowl/try-devutils/issues/new?template=bug_report.md">
+    Found a bug? Report it on GitHub with details and we'll fix it.
+  </Card>
+  
+  <Card title="Request a feature" icon="lightbulb" href="https://github.com/gammabowl/try-devutils/issues/new?template=feature_request.md">
+    Have an idea for a new utility or feature? We'd love to hear it.
+  </Card>
+  
+  <Card title="View source code" icon="code" href="https://github.com/gammabowl/try-devutils">
+    TryDevUtils is open source. Browse the code, contribute, or self-host.
+  </Card>
+  
+  <Card title="Privacy policy" icon="shield" href="/privacy">
+    Learn more about our privacy-first approach and data handling.
+  </Card>
+</CardGroup>
 
 ## Next steps
 
-Now that you have your docs running, explore these key features:
+You're now ready to use TryDevUtils! Here's what to do next:
 
-<CardGroup cols={2}>
+1. **Explore all 22 utilities** by browsing the homepage or using the command palette
+2. **Mark your favorites** by clicking the heart icon on utilities you use often
+3. **Learn keyboard shortcuts** by pressing `?` to boost your productivity
+4. **Try the desktop app** if you want offline access and native performance
 
-<Card title="Write Content" icon="pen-to-square" href="/essentials/markdown">
-  Learn MDX syntax and start writing your documentation.
+<Card title="Back to introduction" icon="arrow-left" href="/introduction">
+  Learn more about TryDevUtils features and philosophy
 </Card>
-
-<Card title="Customize style" icon="palette" href="/essentials/settings">
-  Make your docs match your brand perfectly.
-</Card>
-
-<Card title="Add code examples" icon="square-code" href="/essentials/code">
-  Include syntax-highlighted code blocks.
-</Card>
-
-<Card title="API documentation" icon="code" href="/api-reference/introduction">
-  Auto-generate API docs from OpenAPI specs.
-</Card>
-
-</CardGroup>
-
-<Note>
-  **Need help?** See our [full documentation](https://mintlify.com/docs) or join our [community](https://mintlify.com/community).
-</Note>

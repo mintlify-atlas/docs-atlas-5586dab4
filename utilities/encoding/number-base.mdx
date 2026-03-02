@@ -1,0 +1,132 @@
+---
+title: Number base converter
+description: Convert numbers between binary, octal, decimal, hexadecimal, Base32, and Base64 with support for large numbers using BigInt
+---
+
+The number base converter transforms numbers between different numeral systems. It supports six bases and handles arbitrarily large numbers using JavaScript's BigInt.
+
+## Features
+
+### Six supported bases
+
+Convert between:
+
+- **Binary (Base 2)** - Uses digits 0-1
+- **Octal (Base 8)** - Uses digits 0-7
+- **Decimal (Base 10)** - Standard base with digits 0-9
+- **Hexadecimal (Base 16)** - Uses digits 0-9 and letters A-F
+- **Base32** - Uses A-Z and 2-7 (RFC 4648 alphabet)
+- **Base64** - Uses A-Z, a-z, 0-9, +, / alphabet
+
+### Large number support
+
+The utility uses BigInt internally, allowing you to convert numbers far beyond JavaScript's standard number limits without precision loss.
+
+### All representations view
+
+After conversion, see your number in all six bases simultaneously with a convenient table that includes:
+- Base name badges
+- Formatted values with prefixes (0b, 0x, 0o)
+- Individual copy buttons for each representation
+
+### Prefix recognition
+
+The converter automatically strips common prefixes:
+- `0b` for binary
+- `0o` for octal
+- `0x` for hexadecimal
+
+You can enter numbers with or without these prefixes.
+
+### Swap bases
+
+Quickly swap the source and target bases to reverse your conversion direction.
+
+### Built-in examples
+
+Access common conversions:
+- Decimal 255 (maximum byte value)
+- Binary 11111111
+- Hexadecimal FF
+- One million in decimal
+- DEADBEEF (classic hex value)
+
+### Keyboard shortcuts
+
+Work efficiently with shortcuts for:
+- Converting numbers
+- Copying results
+- Clearing fields
+
+## Use cases
+
+### Programming and debugging
+
+Convert memory addresses, bit flags, or color values:
+
+```
+Input: 255 (decimal)
+Output: FF (hex), 11111111 (binary), 377 (octal)
+```
+
+### Network addressing
+
+Convert IP address components or subnet masks between decimal and hexadecimal.
+
+### Color codes
+
+Convert RGB decimal values to hexadecimal for CSS:
+
+```
+Input: 59 (red channel)
+Output: 3B (hex)
+```
+
+### Data encoding
+
+Convert numerical identifiers to Base32 or Base64 for compact representation.
+
+### Learning computer science
+
+Understand how different numeral systems represent the same value.
+
+<Note>
+Base32 and Base64 representations use character alphabets rather than pure numerical notation, making them suitable for encoding in text-based systems.
+</Note>
+
+## How it works
+
+The conversion process:
+
+1. **Input validation** - Checks that your input matches the expected character set for the source base
+2. **Parse to BigInt** - Converts the input to a BigInt decimal value
+3. **Convert to target base** - Transforms the BigInt to the target base representation
+4. **Generate all bases** - Computes representations in all six bases for the reference table
+
+**Standard bases (2, 8, 10, 16):**
+- Uses JavaScript's built-in `toString(radix)` method
+- Hexadecimal output is uppercase
+
+**Base32:**
+- Uses RFC 4648 alphabet: ABCDEFGHIJKLMNOPQRSTUVWXYZ234567
+- Converts by repeatedly dividing by 32
+
+**Base64:**
+- Uses standard alphabet: A-Z, a-z, 0-9, +, /
+- Converts by repeatedly dividing by 64
+
+<Tip>
+The "All Representations" table appears after your first conversion, letting you instantly see and copy any base without switching modes.
+</Tip>
+
+## Error handling
+
+The utility validates input and shows descriptive errors:
+- "Invalid Binary value. Base 2 (0-1)" for incorrect binary digits
+- "Invalid Hexadecimal value. Base 16 (0-9, A-F)" for invalid hex characters
+- "Please enter a value to convert" for empty input
+
+## Related tools
+
+- **Base64 encoder** - For text encoding (different from numerical Base64)
+- **Color converter** - For converting color values between hex, RGB, and HSL
